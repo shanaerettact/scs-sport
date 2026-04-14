@@ -1,10 +1,35 @@
 <template>
   <div class="bottom-nav-wrapper">
-    <!-- Cutout curve behind home button -->
-    <svg class="bottom-nav-curve" viewBox="0 0 360 70" preserveAspectRatio="none" aria-hidden="true">
+    <!-- Frosted glass base layer -->
+    <div class="bottom-nav-glass" aria-hidden="true" />
+
+    <!-- SVG notch mask — carved out for the home button -->
+    <svg class="bottom-nav-curve" viewBox="0 0 360 72" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <filter id="notch-shadow" x="-10%" y="-60%" width="120%" height="220%">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur" />
+          <feOffset dx="0" dy="-3" result="offsetBlur" />
+          <feFlood flood-color="rgba(44,217,125,0.18)" result="color" />
+          <feComposite in="color" in2="offsetBlur" operator="in" result="shadow" />
+          <feMerge>
+            <feMergeNode in="shadow" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+      <!-- White/dark frosted fill that cuts out the notch -->
       <path
         :d="curvePath"
         :fill="navBgColor"
+        filter="url(#notch-shadow)"
+      />
+      <!-- Subtle top border line -->
+      <path
+        :d="borderPath"
+        fill="none"
+        :stroke="borderColor"
+        stroke-width="0.8"
+        opacity="0.6"
       />
     </svg>
 
@@ -169,12 +194,20 @@ function handleNav(item: NavItem) {
   }
 }
 
-// SVG curve path — cutout notch in center
-const curvePath = `M0,0 L140,0 Q145,0 148,5 Q155,55 180,55 Q205,55 212,5 Q215,0 220,0 L360,0 L360,70 L0,70 Z`;
+// SVG notch — smoother cubic bezier arcs, deeper bowl, wider clearance
+// The path carves the notch; the glass layer underneath shows through
+const curvePath = `M0,0 L136,0 C142,0 146,4 148,10 C153,42 162,58 180,58 C198,58 207,42 212,10 C214,4 218,0 224,0 L360,0 L360,72 L0,72 Z`;
 
-// Nav background respects dark mode
+// Mirror path for the top border highlight (sits just inside the cut)
+const borderPath = `M0,0.4 L136,0.4 C142,0.4 146,4.4 148,10.4 C153,42.4 162,58.4 180,58.4 C198,58.4 207,42.4 212,10.4 C214,4.4 218,0.4 224,0.4 L360,0.4`;
+
+// Nav background — transparent so the glass layer behind shows through
 const navBgColor = computed(() =>
   themeStore.isDark ? '#1a1e1f' : '#ffffff'
+);
+
+const borderColor = computed(() =>
+  themeStore.isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)'
 );
 </script>
 
@@ -186,9 +219,41 @@ const navBgColor = computed(() =>
   left: 0;
   right: 0;
   z-index: 100;
-  /* safe area for notched phones */
   padding-bottom: env(safe-area-inset-bottom, 0px);
   pointer-events: none;
+  /* lift entire bar with a diffuse ambient shadow */
+  filter: drop-shadow(0 -8px 32px rgba(0, 0, 0, 0.36));
+}
+
+/* ---- Frosted glass base — sits behind everything ---- */
+.bottom-nav-glass {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* taller than the curve so the blur fills the whole area */
+  height: 72px;
+  /* frosted glass core */
+  backdrop-filter: blur(24px) saturate(1.6) brightness(0.92);
+  -webkit-backdrop-filter: blur(24px) saturate(1.6) brightness(0.92);
+  /* semi-transparent dark tint */
+  background: rgba(18, 21, 22, 0.72);
+  /* top-edge glass shine */
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  /* green tint line at top — like a LED strip */
+  box-shadow:
+    0 -1px 0 0 rgba(44, 217, 125, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  pointer-events: none;
+  z-index: 0;
+}
+
+:global(html:not(.dark)) .bottom-nav-glass {
+  background: rgba(240, 244, 245, 0.78);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 -1px 0 0 rgba(44, 217, 125, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 
 /* ---- SVG notch curve ---- */
@@ -198,11 +263,13 @@ const navBgColor = computed(() =>
   left: 0;
   right: 0;
   width: 100%;
-  height: 70px;
+  height: 72px;
   display: block;
-  filter: drop-shadow(0 -4px 16px rgba(0,0,0,0.13));
   pointer-events: none;
   z-index: 1;
+  /* subtle green inner glow around the notch arc */
+  filter: drop-shadow(0 -2px 10px rgba(44, 217, 125, 0.15));
+  overflow: visible;
 }
 
 /* ---- Nav bar ---- */
@@ -215,10 +282,6 @@ const navBgColor = computed(() =>
   height: 60px;
   padding: 0 4px;
   pointer-events: all;
-}
-
-:global(.dark) .bottom-nav-curve path {
-  fill: #1a1e1f;
 }
 
 /* ---- Individual nav item ---- */
@@ -349,32 +412,40 @@ const navBgColor = computed(() =>
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
-  /* rich green button */
-  background: linear-gradient(145deg, #38f08a 0%, #1ec46a 55%, #17a85a 100%);
+  /* premium layered green gradient */
+  background: linear-gradient(150deg, #52f99a 0%, #2cd97d 40%, #1aae60 100%);
+  /* outer ring for separation from the notch */
+  outline: 2.5px solid rgba(255, 255, 255, 0.12);
+  outline-offset: 2px;
   box-shadow:
-    0 4px 18px rgba(44, 217, 125, 0.55),
-    0 1px 4px rgba(0,0,0,0.25),
-    inset 0 1px 0 rgba(255,255,255,0.3);
+    0 0 0 1px rgba(44, 217, 125, 0.3),
+    0 6px 24px rgba(44, 217, 125, 0.6),
+    0 2px 8px rgba(0, 0, 0, 0.35),
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.38),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12);
   transition:
-    box-shadow 0.22s ease,
-    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow 0.25s ease,
+    transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 
   .nav-home-btn.is-active & {
     box-shadow:
-      0 6px 28px rgba(44, 217, 125, 0.75),
-      0 2px 6px rgba(0,0,0,0.3),
-      inset 0 1px 0 rgba(255,255,255,0.35);
-    transform: scale(1.08);
+      0 0 0 1px rgba(44, 217, 125, 0.5),
+      0 8px 32px rgba(44, 217, 125, 0.8),
+      0 3px 10px rgba(0, 0, 0, 0.4),
+      inset 0 1.5px 0 rgba(255, 255, 255, 0.42),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.14);
+    transform: scale(1.06);
   }
 
   .nav-home-btn:active & {
-    transform: scale(0.92);
+    transform: scale(0.91);
     box-shadow:
-      0 2px 10px rgba(44, 217, 125, 0.45),
-      0 1px 2px rgba(0,0,0,0.2);
+      0 2px 10px rgba(44, 217, 125, 0.4),
+      0 1px 3px rgba(0, 0, 0, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
   }
 }
 
