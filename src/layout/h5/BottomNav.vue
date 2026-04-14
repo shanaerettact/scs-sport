@@ -3,50 +3,6 @@
     <!-- Frosted glass base layer -->
     <div class="bottom-nav-glass" aria-hidden="true" />
 
-    <!-- SVG notch mask — punches the transparent cutout and draws the rim -->
-    <svg class="bottom-nav-curve" viewBox="0 0 360 72" preserveAspectRatio="none" aria-hidden="true">
-      <defs>
-        <!-- Clip: only the area outside the notch is visible -->
-        <clipPath id="notch-clip">
-          <path :d="curvePath" />
-        </clipPath>
-
-        <!-- Glow along the notch rim edge -->
-        <filter id="rim-glow" x="-30%" y="-60%" width="160%" height="260%">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur" />
-          <feComposite in="blur" in2="SourceGraphic" operator="over" />
-        </filter>
-      </defs>
-
-      <!-- Frosted glass rect — clipped to the non-notch area -->
-      <rect
-        x="0" y="0" width="360" height="72"
-        :fill="glassFill"
-        clip-path="url(#notch-clip)"
-      />
-
-      <!-- Top border line — full width on the solid areas -->
-      <line x1="0" y1="0.5" x2="136" y2="0.5" :stroke="borderColor" stroke-width="0.8" opacity="0.7" />
-      <line x1="224" y1="0.5" x2="360" y2="0.5" :stroke="borderColor" stroke-width="0.8" opacity="0.7" />
-
-      <!-- Notch arc rim — glowing green stroke that traces the bowl edge -->
-      <path
-        :d="rimPath"
-        fill="none"
-        stroke="rgba(44,217,125,0.45)"
-        stroke-width="1"
-        filter="url(#rim-glow)"
-      />
-      <!-- Inner highlight — crisp thin white line on top of glow -->
-      <path
-        :d="rimPath"
-        fill="none"
-        :stroke="rimHighlight"
-        stroke-width="0.7"
-        opacity="0.55"
-      />
-    </svg>
-
     <!-- Nav bar -->
     <nav class="bottom-nav" role="navigation" aria-label="主導航">
       <!-- Left two items -->
@@ -208,36 +164,7 @@ function handleNav(item: NavItem) {
   }
 }
 
-// ---- SVG geometry ----
 
-// curvePath: the solid region of the bar (everything EXCEPT the notch).
-// Used as a clipPath so only the frosted glass rect is clipped here.
-// M → full bar rect with a smooth cubic-bezier bowl carved at center.
-const curvePath =
-  `M0,0 L136,0 ` +
-  `C142,0 146,4 148,10 C153,42 163,60 180,60 C197,60 207,42 212,10 ` +
-  `C214,4 218,0 224,0 ` +
-  `L360,0 L360,72 L0,72 Z`;
-
-// rimPath: only the arc of the notch bowl — used for the glowing rim stroke
-const rimPath =
-  `M136,0 ` +
-  `C142,0 146,4 148,10 C153,42 163,60 180,60 C197,60 207,42 212,10 ` +
-  `C214,4 218,0 224,0`;
-
-// The semi-transparent glass color that the clipped rect shows
-const glassFill = computed(() =>
-  themeStore.isDark ? 'rgba(18,21,22,0.78)' : 'rgba(238,242,244,0.82)'
-);
-
-const borderColor = computed(() =>
-  themeStore.isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.07)'
-);
-
-// Rim highlight: white in dark mode, dark in light mode
-const rimHighlight = computed(() =>
-  themeStore.isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.18)'
-);
 </script>
 
 <style scoped lang="scss">
@@ -250,47 +177,38 @@ const rimHighlight = computed(() =>
   z-index: 100;
   padding-bottom: env(safe-area-inset-bottom, 0px);
   pointer-events: none;
-  /* ambient lift shadow — large soft bleed upward */
-  filter: drop-shadow(0 -6px 28px rgba(0, 0, 0, 0.45))
-          drop-shadow(0 -1px 0 rgba(44, 217, 125, 0.18));
 }
 
 /* ---- Frosted glass base ---- */
-/* Provides the blur source for the entire bar area including under the notch. */
-/* The SVG rect (clipped) sits on top and adds the colored tint. */
+/* Full-width, fully opaque frosted panel — backdrop-filter blurs page content behind it. */
 .bottom-nav-glass {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   height: 72px;
-  /* true backdrop blur — blurs the content rendered behind this element */
-  backdrop-filter: blur(28px) saturate(1.8) brightness(0.88);
-  -webkit-backdrop-filter: blur(28px) saturate(1.8) brightness(0.88);
-  /* no background — the SVG colored rect handles the tint via clipPath */
-  background: transparent;
+  /* frosted tint — dark mode */
+  background: rgba(15, 18, 19, 0.82);
+  backdrop-filter: blur(28px) saturate(1.9) brightness(0.85);
+  -webkit-backdrop-filter: blur(28px) saturate(1.9) brightness(0.85);
+  /* top edge: green LED line + glass shine */
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow:
+    0 -1px 0 0 rgba(44, 217, 125, 0.25),
+    0 -8px 32px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
   pointer-events: none;
   z-index: 0;
 }
 
-/* ---- SVG notch ---- */
-/* Contains: clipped glass-tint rect, rim glow stroke, border lines. */
-.bottom-nav-curve {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 72px;
-  display: block;
-  pointer-events: none;
-  z-index: 1;
-  overflow: visible;
+:global(html:not(.dark)) .bottom-nav-glass {
+  background: rgba(240, 244, 245, 0.85);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 -1px 0 0 rgba(44, 217, 125, 0.2),
+    0 -8px 32px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
 }
-
-/* Notch-area: the transparent hole punched by clipPath lets the blurred */
-/* backdrop show through, creating a seamless frosted-glass notch. */
-/* We add a faint green glow + inner-arc highlight on the SVG rim paths. */
 
 /* ---- Nav bar ---- */
 .bottom-nav {
@@ -409,7 +327,8 @@ const rimHighlight = computed(() =>
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 8px;
+  /* lift above the flat glass bar — more pronounced float */
+  bottom: 14px;
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -425,6 +344,21 @@ const rimHighlight = computed(() =>
 
   &:active {
     transform: translateX(-50%) scale(0.9);
+  }
+
+  /* Radial halo on the glass bar surface behind the button */
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 20px;
+    background: radial-gradient(ellipse at center, rgba(44, 217, 125, 0.22) 0%, transparent 75%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: -1;
   }
 }
 
