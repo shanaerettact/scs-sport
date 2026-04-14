@@ -237,8 +237,27 @@ function handleNav(item: NavItem) {
   padding: 0;
   position: relative;
   color: var(--color-subtle-light);
-  transition: color 0.22s ease;
+  transition:
+    color 0.22s ease,
+    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
   -webkit-tap-highlight-color: transparent;
+
+  /* Hover: slight upward float + green tint */
+  @media (hover: hover) {
+    &:hover {
+      color: var(--color-primary);
+      transform: translateY(-3px);
+
+      .nav-icon {
+        transform: translateY(-2px) scale(1.1);
+        filter: drop-shadow(0 0 4px rgba(44, 217, 125, 0.45));
+      }
+
+      .nav-label {
+        color: var(--color-primary);
+      }
+    }
+  }
 
   &:active {
     opacity: 0.75;
@@ -322,12 +341,18 @@ function handleNav(item: NavItem) {
   pointer-events: none;
 }
 
+/* ---- Float keyframe — used on home button hover ---- */
+@keyframes btn-float {
+  0%   { transform: translateX(-50%) translateY(0); }
+  50%  { transform: translateX(-50%) translateY(-5px); }
+  100% { transform: translateX(-50%) translateY(0); }
+}
+
 /* ---- Floating home button ---- */
 .nav-home-btn {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  /* lift above the flat glass bar — more pronounced float */
   bottom: 14px;
   z-index: 10;
   display: flex;
@@ -340,9 +365,33 @@ function handleNav(item: NavItem) {
   padding: 0;
   pointer-events: all;
   -webkit-tap-highlight-color: transparent;
-  transition: transform 0.18s ease;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Hover: trigger smooth floating animation */
+  @media (hover: hover) {
+    &:hover {
+      animation: btn-float 1.6s ease-in-out infinite;
+
+      .nav-home-inner {
+        /* Tighter, more focused glow — reduced halo size */
+        box-shadow:
+          0 0 0 1px rgba(44, 217, 125, 0.4),
+          0 4px 14px rgba(44, 217, 125, 0.5),
+          0 2px 6px rgba(0, 0, 0, 0.3),
+          inset 0 1.5px 0 rgba(255, 255, 255, 0.42),
+          inset 0 -1px 0 rgba(0, 0, 0, 0.12);
+        transform: scale(1.04);
+      }
+
+      .nav-home-label {
+        opacity: 1;
+        transform: translateY(-1px);
+      }
+    }
+  }
 
   &:active {
+    animation: none;
     transform: translateX(-50%) scale(0.9);
   }
 
@@ -353,12 +402,21 @@ function handleNav(item: NavItem) {
     bottom: -14px;
     left: 50%;
     transform: translateX(-50%);
-    width: 80px;
-    height: 20px;
-    background: radial-gradient(ellipse at center, rgba(44, 217, 125, 0.22) 0%, transparent 75%);
+    /* Reduced halo footprint */
+    width: 56px;
+    height: 14px;
+    background: radial-gradient(ellipse at center, rgba(44, 217, 125, 0.18) 0%, transparent 72%);
     border-radius: 50%;
     pointer-events: none;
     z-index: -1;
+    transition: opacity 0.25s ease;
+  }
+
+  /* Halo intensifies subtly on hover */
+  @media (hover: hover) {
+    &:hover::before {
+      opacity: 0.7;
+    }
   }
 }
 
@@ -371,12 +429,13 @@ function handleNav(item: NavItem) {
   border-radius: 50%;
   /* premium layered green gradient */
   background: linear-gradient(150deg, #52f99a 0%, #2cd97d 40%, #1aae60 100%);
-  /* outer ring for separation from the notch */
+  /* outer ring for separation from bar */
   outline: 2.5px solid rgba(255, 255, 255, 0.12);
   outline-offset: 2px;
+  /* default glow — moderate, not oversized */
   box-shadow:
     0 0 0 1px rgba(44, 217, 125, 0.3),
-    0 6px 24px rgba(44, 217, 125, 0.6),
+    0 5px 18px rgba(44, 217, 125, 0.45),
     0 2px 8px rgba(0, 0, 0, 0.35),
     inset 0 1.5px 0 rgba(255, 255, 255, 0.38),
     inset 0 -1px 0 rgba(0, 0, 0, 0.12);
@@ -417,20 +476,37 @@ function handleNav(item: NavItem) {
   color: var(--color-primary);
   line-height: 1;
   white-space: nowrap;
-  transition: color 0.2s ease;
+  transition:
+    color 0.2s ease,
+    transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+    opacity 0.2s ease;
 
   .nav-home-btn.is-active & {
     color: var(--color-primary);
   }
 }
 
-/* ---- Ripple animation on tap ---- */
+/* ---- Ripple animation on active state — reduced max spread ---- */
 @keyframes ripple-out {
-  0%   { box-shadow: 0 0 0 0 rgba(44, 217, 125, 0.55); }
-  100% { box-shadow: 0 0 0 14px rgba(44, 217, 125, 0); }
+  0%   {
+    box-shadow:
+      0 0 0 0   rgba(44, 217, 125, 0.5),
+      0 5px 18px rgba(44, 217, 125, 0.45),
+      0 2px 8px  rgba(0, 0, 0, 0.35),
+      inset 0 1.5px 0 rgba(255, 255, 255, 0.38),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.12);
+  }
+  100% {
+    box-shadow:
+      0 0 0 8px rgba(44, 217, 125, 0),
+      0 5px 18px rgba(44, 217, 125, 0.45),
+      0 2px 8px  rgba(0, 0, 0, 0.35),
+      inset 0 1.5px 0 rgba(255, 255, 255, 0.38),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.12);
+  }
 }
 
 .nav-home-btn.is-active .nav-home-inner {
-  animation: ripple-out 1.4s ease-out infinite;
+  animation: ripple-out 1.6s ease-out infinite;
 }
 </style>
