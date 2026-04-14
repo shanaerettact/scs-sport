@@ -1,0 +1,118 @@
+workflow:
+    rules:
+        - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+        - if: '$CI_PIPELINE_SOURCE == "push"'
+
+stages:
+  - build
+
+default:
+  image: docker:20.10.16
+  services:
+    - docker:20.10.16-dind
+
+variables:
+  DOCKER_HOST: tcp://docker:2376
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_TLS_VERIFY: 1
+  DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
+  HARBOR_PROJECT: tgp/scs-client-web
+
+.shared_runner_job:
+  tags:
+    - shared
+
+build-dev:
+  stage: build
+  extends: .shared_runner_job
+  rules:
+    # 如果是在 develop 分支且有其他檔案變動，則執行 pipeline
+    - if: '$CI_COMMIT_REF_NAME == "develop"'
+      changes:
+        - "*"
+        - "**/*"
+        
+    # 如果是在 develop 分支且變動只發生在 kubernetes-manifests/* 目錄下，不執行 pipeline
+    - if: '$CI_COMMIT_REF_NAME == "develop"'
+      changes:
+        - "kubernetes-manifests/*"
+        - "kubernetes-manifests/**/*"
+      when: never
+
+    # 如果是在 develop 分支且有其他檔案變動，則執行 pipeline
+    - if: '$CI_COMMIT_REF_NAME == "develop"'
+      changes:
+        - "*"
+        - "**/*"
+      when: always
+  before_script:
+    - until docker info; do sleep 1; done
+    - echo $HARBOR_PASSWORD | docker login $HARBOR_HOST --username $HARBOR_USERNAME --password-stdin
+  script:
+    - echo "//IMAGE Building//"
+    - docker build --build-arg BRANCH_NAME=develop -t $HARBOR_HOST/$HARBOR_PROJECT:dev .
+    - docker push $HARBOR_HOST/$HARBOR_PROJECT:dev
+
+build-uat:
+  stage: build
+  extends: .shared_runner_job
+  rules:
+    # 如果是在 develop 分支且有其他檔案變動，則執行 pipeline
+    - if: '$CI_COMMIT_REF_NAME == "uat"'
+      changes:
+        - "*"
+        - "**/*"
+        
+    # 如果是在 develop 分支且變動只發生在 kubernetes-manifests/* 目錄下，不執行 pipeline
+    - if: '$CI_COMMIT_REF_NAME == "uat"'
+      changes:
+        - "kubernetes-manifests/*"
+        - "kubernetes-manifests/**/*"
+      when: never
+
+    # 如果是在 develop 分支且有其他檔案變動，則執行 pipeline
+    - if: '$CI_COMMIT_REF_NAME == "uat"'
+      changes:
+        - "*"
+        - "**/*"
+      when: always
+  before_script:
+    - until docker info; do sleep 1; done
+    - echo $HARBOR_PASSWORD | docker login $HARBOR_HOST --username $HARBOR_USERNAME --password-stdin
+  script:
+    - echo "//IMAGE Building//"
+
+    - docker build --build-arg BRANCH_NAME=uat -t $HARBOR_HOST/$HARBOR_PROJECT:uat .
+    - docker push $HARBOR_HOST/$HARBOR_PROJECT:uat
+
+build-prod:
+  stage: build
+  extends: .shared_runner_job
+  rules:
+    # 如果是在 develop 分支且有其他檔案變動，則執行 pipeline
+    - if: '$CI_COMMIT_REF_NAME == "prod"'
+      changes:
+        - "*"
+        - "**/*"
+        
+    # 如果是在 develop 分支且變動只發生在 kubernetes-manifests/* 目錄下，不執行 pipeline
+    - if: '$CI_COMMIT_REF_NAME == "prod"'
+      changes:
+        - "kubernetes-manifests/*"
+        - "kubernetes-manifests/**/*"
+      when: never
+
+    # 如果是在 develop 分支且有其他檔案變動，則執行 pipeline
+    - if: '$CI_COMMIT_REF_NAME == "prod"'
+      changes:
+        - "*"
+        - "**/*"
+      when: always
+  before_script:
+    - until docker info; do sleep 1; done
+    - echo $HARBOR_PASSWORD | docker login $HARBOR_HOST --username $HARBOR_USERNAME --password-stdin
+  script:
+    - echo "//IMAGE Building//"
+
+    - docker build --build-arg BRANCH_NAME=prod -t $HARBOR_HOST/$HARBOR_PROJECT:prod .
+    - docker push $HARBOR_HOST/$HARBOR_PROJECT:prod

@@ -1,0 +1,107 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --color-primary: #2cd97d;
+  --color-background-color: #f4f5fa;
+  --color-surface: #FAFCFF;
+  --color-surface-hover: #e0e0e0;
+  --color-surface-soft: #FCFEFF;
+  --color-bet-panel: #fff;
+  --color-main: #000000;
+  --color-subtle: #4b5563;
+  --color-subtle-light: #9ca3af;
+  --color-outcome-background: #eef1f3;
+  --color-side-outcome-background: #eef1f3;
+}
+
+.dark {
+  --color-primary: #63e2b7;
+  --color-background-color: transparent;
+  --color-surface: #3a4142;
+  --color-surface-hover: #4a5152;
+  --color-surface-soft: #292d2e;
+  --color-bet-panel: #232626;
+  --color-main: #ffffff;
+  --color-subtle: #9ca3af;
+  --color-subtle-light: #d1d5db;
+  --color-outcome-background: #292d2e;
+  --color-side-outcome-background: #202324;
+}
+
+.bg-surface {
+  background-color: var(--color-surface);
+}
+
+.bg-surface-hover:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.bg-surface-soft {
+  background-color: var(--color-surface-soft);
+}
+
+.bg-bet-panel {
+  background-color: var(--color-bet-panel);
+}
+
+.text-main {
+  color: var(--color-main);
+}
+
+.text-subtle {
+  color: var(--color-subtle);
+}
+
+.text-subtle-light {
+  color: var(--color-subtle-light);
+}
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.bg-outcome {
+  background-color: var(--color-outcome-background);
+}
+
+.bg-outcome.side-outcome {
+  background-color: var(--color-side-outcome-background);
+}
+
+.bg-outcome.side-outcome:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.sport-filter-btn {
+  display: flex;
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.2s, color 0.2s;
+  padding: 0.5rem 0.75rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.sport-filter-btn.is-active {
+  background-color: var(--color-primary);
+  color: black;
+}
+
+.sport-filter-btn:not(.is-active) {
+  background-color: var(--color-surface-soft);
+  color: var(--color-main);
+  border-color: var(--color-surface-hover);
+}
+
+.sport-filter-btn:not(.is-active):hover {
+  background-color: var(--color-surface-hover);
+}
