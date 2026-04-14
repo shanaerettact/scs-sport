@@ -3,33 +3,47 @@
     <!-- Frosted glass base layer -->
     <div class="bottom-nav-glass" aria-hidden="true" />
 
-    <!-- SVG notch mask — carved out for the home button -->
+    <!-- SVG notch mask — punches the transparent cutout and draws the rim -->
     <svg class="bottom-nav-curve" viewBox="0 0 360 72" preserveAspectRatio="none" aria-hidden="true">
       <defs>
-        <filter id="notch-shadow" x="-10%" y="-60%" width="120%" height="220%">
-          <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur" />
-          <feOffset dx="0" dy="-3" result="offsetBlur" />
-          <feFlood flood-color="rgba(44,217,125,0.18)" result="color" />
-          <feComposite in="color" in2="offsetBlur" operator="in" result="shadow" />
-          <feMerge>
-            <feMergeNode in="shadow" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
+        <!-- Clip: only the area outside the notch is visible -->
+        <clipPath id="notch-clip">
+          <path :d="curvePath" />
+        </clipPath>
+
+        <!-- Glow along the notch rim edge -->
+        <filter id="rim-glow" x="-30%" y="-60%" width="160%" height="260%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur" />
+          <feComposite in="blur" in2="SourceGraphic" operator="over" />
         </filter>
       </defs>
-      <!-- White/dark frosted fill that cuts out the notch -->
-      <path
-        :d="curvePath"
-        :fill="navBgColor"
-        filter="url(#notch-shadow)"
+
+      <!-- Frosted glass rect — clipped to the non-notch area -->
+      <rect
+        x="0" y="0" width="360" height="72"
+        :fill="glassFill"
+        clip-path="url(#notch-clip)"
       />
-      <!-- Subtle top border line -->
+
+      <!-- Top border line — full width on the solid areas -->
+      <line x1="0" y1="0.5" x2="136" y2="0.5" :stroke="borderColor" stroke-width="0.8" opacity="0.7" />
+      <line x1="224" y1="0.5" x2="360" y2="0.5" :stroke="borderColor" stroke-width="0.8" opacity="0.7" />
+
+      <!-- Notch arc rim — glowing green stroke that traces the bowl edge -->
       <path
-        :d="borderPath"
+        :d="rimPath"
         fill="none"
-        :stroke="borderColor"
-        stroke-width="0.8"
-        opacity="0.6"
+        stroke="rgba(44,217,125,0.45)"
+        stroke-width="1"
+        filter="url(#rim-glow)"
+      />
+      <!-- Inner highlight — crisp thin white line on top of glow -->
+      <path
+        :d="rimPath"
+        fill="none"
+        :stroke="rimHighlight"
+        stroke-width="0.7"
+        opacity="0.55"
       />
     </svg>
 
@@ -194,20 +208,35 @@ function handleNav(item: NavItem) {
   }
 }
 
-// SVG notch — smoother cubic bezier arcs, deeper bowl, wider clearance
-// The path carves the notch; the glass layer underneath shows through
-const curvePath = `M0,0 L136,0 C142,0 146,4 148,10 C153,42 162,58 180,58 C198,58 207,42 212,10 C214,4 218,0 224,0 L360,0 L360,72 L0,72 Z`;
+// ---- SVG geometry ----
 
-// Mirror path for the top border highlight (sits just inside the cut)
-const borderPath = `M0,0.4 L136,0.4 C142,0.4 146,4.4 148,10.4 C153,42.4 162,58.4 180,58.4 C198,58.4 207,42.4 212,10.4 C214,4.4 218,0.4 224,0.4 L360,0.4`;
+// curvePath: the solid region of the bar (everything EXCEPT the notch).
+// Used as a clipPath so only the frosted glass rect is clipped here.
+// M → full bar rect with a smooth cubic-bezier bowl carved at center.
+const curvePath =
+  `M0,0 L136,0 ` +
+  `C142,0 146,4 148,10 C153,42 163,60 180,60 C197,60 207,42 212,10 ` +
+  `C214,4 218,0 224,0 ` +
+  `L360,0 L360,72 L0,72 Z`;
 
-// Nav background — transparent so the glass layer behind shows through
-const navBgColor = computed(() =>
-  themeStore.isDark ? '#1a1e1f' : '#ffffff'
+// rimPath: only the arc of the notch bowl — used for the glowing rim stroke
+const rimPath =
+  `M136,0 ` +
+  `C142,0 146,4 148,10 C153,42 163,60 180,60 C197,60 207,42 212,10 ` +
+  `C214,4 218,0 224,0`;
+
+// The semi-transparent glass color that the clipped rect shows
+const glassFill = computed(() =>
+  themeStore.isDark ? 'rgba(18,21,22,0.78)' : 'rgba(238,242,244,0.82)'
 );
 
 const borderColor = computed(() =>
-  themeStore.isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)'
+  themeStore.isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.07)'
+);
+
+// Rim highlight: white in dark mode, dark in light mode
+const rimHighlight = computed(() =>
+  themeStore.isDark ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.18)'
 );
 </script>
 
@@ -221,42 +250,31 @@ const borderColor = computed(() =>
   z-index: 100;
   padding-bottom: env(safe-area-inset-bottom, 0px);
   pointer-events: none;
-  /* lift entire bar with a diffuse ambient shadow */
-  filter: drop-shadow(0 -8px 32px rgba(0, 0, 0, 0.36));
+  /* ambient lift shadow — large soft bleed upward */
+  filter: drop-shadow(0 -6px 28px rgba(0, 0, 0, 0.45))
+          drop-shadow(0 -1px 0 rgba(44, 217, 125, 0.18));
 }
 
-/* ---- Frosted glass base — sits behind everything ---- */
+/* ---- Frosted glass base ---- */
+/* Provides the blur source for the entire bar area including under the notch. */
+/* The SVG rect (clipped) sits on top and adds the colored tint. */
 .bottom-nav-glass {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  /* taller than the curve so the blur fills the whole area */
   height: 72px;
-  /* frosted glass core */
-  backdrop-filter: blur(24px) saturate(1.6) brightness(0.92);
-  -webkit-backdrop-filter: blur(24px) saturate(1.6) brightness(0.92);
-  /* semi-transparent dark tint */
-  background: rgba(18, 21, 22, 0.72);
-  /* top-edge glass shine */
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  /* green tint line at top — like a LED strip */
-  box-shadow:
-    0 -1px 0 0 rgba(44, 217, 125, 0.22),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  /* true backdrop blur — blurs the content rendered behind this element */
+  backdrop-filter: blur(28px) saturate(1.8) brightness(0.88);
+  -webkit-backdrop-filter: blur(28px) saturate(1.8) brightness(0.88);
+  /* no background — the SVG colored rect handles the tint via clipPath */
+  background: transparent;
   pointer-events: none;
   z-index: 0;
 }
 
-:global(html:not(.dark)) .bottom-nav-glass {
-  background: rgba(240, 244, 245, 0.78);
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow:
-    0 -1px 0 0 rgba(44, 217, 125, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.55);
-}
-
-/* ---- SVG notch curve ---- */
+/* ---- SVG notch ---- */
+/* Contains: clipped glass-tint rect, rim glow stroke, border lines. */
 .bottom-nav-curve {
   position: absolute;
   bottom: 0;
@@ -267,10 +285,12 @@ const borderColor = computed(() =>
   display: block;
   pointer-events: none;
   z-index: 1;
-  /* subtle green inner glow around the notch arc */
-  filter: drop-shadow(0 -2px 10px rgba(44, 217, 125, 0.15));
   overflow: visible;
 }
+
+/* Notch-area: the transparent hole punched by clipPath lets the blurred */
+/* backdrop show through, creating a seamless frosted-glass notch. */
+/* We add a faint green glow + inner-arc highlight on the SVG rim paths. */
 
 /* ---- Nav bar ---- */
 .bottom-nav {
