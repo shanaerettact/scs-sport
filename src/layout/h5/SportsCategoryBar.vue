@@ -11,10 +11,13 @@
         :aria-pressed="activeSport === sport.key"
         :aria-label="sport.label"
       >
+        <!-- Icon container with inner glow ring when active -->
         <span class="sport-btn__icon">
-          <img :src="sport.icon" :alt="sport.label" class="w-6 h-6 object-contain" />
+          <img :src="sport.icon" :alt="sport.label" class="sport-btn__img" />
         </span>
         <span class="sport-btn__label">{{ sport.label }}</span>
+        <!-- Active indicator dot -->
+        <span class="sport-btn__dot" aria-hidden="true" />
       </button>
     </div>
   </div>
@@ -37,75 +40,143 @@ const sports = [
 </script>
 
 <style scoped lang="scss">
+/* ── Container ─────────────────────────────────────────── */
 .sports-category-bar {
   background-color: var(--color-surface);
   border-bottom: 1px solid var(--color-surface-hover);
-  padding: 8px 0;
+  padding: 6px 0 4px;
 }
 
+/* ── Scroll track ───────────────────────────────────────── */
 .sports-scroll-wrapper {
   display: flex;
-  gap: 6px;
+  align-items: flex-start;
+  gap: 2px;
   overflow-x: auto;
-  padding: 0 12px;
+  padding: 0 10px;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  &::-webkit-scrollbar { display: none; }
 }
 
+/* ── Button ─────────────────────────────────────────────── */
 .sport-btn {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 8px 12px;
-  border: none;
+  gap: 3px;
+  /* Tighter padding: 5px vertical, 8px horizontal */
+  padding: 5px 8px 6px;
+  border: 1px solid transparent;
   border-radius: 10px;
   background: transparent;
   cursor: pointer;
   flex-shrink: 0;
-  transition: background 0.2s, transform 0.15s;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    transform 0.12s ease,
+    box-shadow 0.18s ease;
   -webkit-tap-highlight-color: transparent;
+  outline: none;
 
   &:active {
-    transform: scale(0.93);
+    transform: scale(0.91);
   }
 
+  /* ── Icon wrapper ── */
   &__icon {
-    width: 36px;
-    height: 36px;
+    position: relative;
+    width: 30px;
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
+    border-radius: 8px;
     background-color: var(--color-outcome-background);
-    transition: background 0.2s;
+    border: 1px solid transparent;
+    transition:
+      background-color 0.18s ease,
+      border-color 0.18s ease,
+      box-shadow 0.18s ease;
   }
 
+  /* ── Image ── */
+  &__img {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    /* Desaturate inactive icons for visual hierarchy */
+    filter: grayscale(40%) opacity(0.75);
+    transition: filter 0.18s ease;
+  }
+
+  /* ── Label ── */
   &__label {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 500;
+    letter-spacing: 0.01em;
     color: var(--color-subtle);
     white-space: nowrap;
-    transition: color 0.2s;
+    transition: color 0.18s ease, font-weight 0.18s ease;
   }
 
-  &.is-active {
+  /* ── Active indicator dot (hidden by default) ── */
+  &__dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    translate: -50% 0;
+  }
+
+  /* ── Hover state (non-active) ── */
+  &:not(.is-active):hover {
+    background-color: var(--color-surface-hover);
+    border-color: var(--color-surface-hover);
+
     .sport-btn__icon {
-      background-color: var(--color-primary);
+      background-color: var(--color-surface-hover);
+    }
+
+    .sport-btn__img {
+      filter: grayscale(15%) opacity(0.9);
+    }
+  }
+
+  /* ── Active state ── */
+  &.is-active {
+    background-color: rgba(44, 217, 125, 0.08);
+    border-color: rgba(44, 217, 125, 0.22);
+    box-shadow: 0 1px 6px rgba(44, 217, 125, 0.1);
+
+    .sport-btn__icon {
+      background-color: rgba(44, 217, 125, 0.15);
+      border-color: rgba(44, 217, 125, 0.35);
+      box-shadow: inset 0 0 0 1px rgba(44, 217, 125, 0.2);
+    }
+
+    .sport-btn__img {
+      filter: grayscale(0%) opacity(1) drop-shadow(0 0 4px rgba(44, 217, 125, 0.5));
     }
 
     .sport-btn__label {
       color: var(--color-primary);
       font-weight: 700;
     }
-  }
 
-  &:not(.is-active):hover .sport-btn__icon {
-    background-color: var(--color-surface-hover);
+    .sport-btn__dot {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 }
 </style>
