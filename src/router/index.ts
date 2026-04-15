@@ -42,14 +42,8 @@ const router = createRouter({
     },
     {
       path: '/h5',
-      component: () => import('@/layout/h5/index.vue'),
-      children: [
-        {
-          path: '',
-          name: 'h5',
-          component: () => import('@/layout/h5/index.vue')
-        }
-      ]
+      name: 'h5',
+      component: () => import('@/layout/h5/index.vue')
     },
     {
       path: '/:catchAll(.*)',

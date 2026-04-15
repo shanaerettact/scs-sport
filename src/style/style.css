@@ -1,6 +1,17 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* H5 BottomNav home button: vertical float (avoids transform clash with -translate-x-1/2) */
+@keyframes bn-home-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
 :root {
   --color-primary: #2cd97d;
   --color-background-color: #f4f5fa;

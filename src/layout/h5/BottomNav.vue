@@ -1,79 +1,105 @@
 <template>
-  <div class="bottom-nav-wrapper">
-    <!-- Frosted glass base layer -->
-    <div class="bottom-nav-glass" aria-hidden="true" />
+  <div class="pointer-events-none fixed bottom-0 left-0 right-0 z-[100] pb-[env(safe-area-inset-bottom,0px)]">
+    <div
+      class="pointer-events-none absolute bottom-0 left-0 right-0 z-0 h-[72px] border-t border-black/[0.06] bg-[rgba(240,244,245,0.85)] shadow-[0_-1px_0_0_rgba(44,217,125,0.2),0_-8px_32px_rgba(0,0,0,0.12),inset_0_1px_0_rgba(255,255,255,0.6)] [-webkit-backdrop-filter:blur(28px)_saturate(1.9)_brightness(0.85)] [backdrop-filter:blur(28px)_saturate(1.9)_brightness(0.85)] dark:border-white/[0.07] dark:bg-[rgba(15,18,19,0.82)] dark:shadow-[0_-1px_0_0_rgba(44,217,125,0.25),0_-8px_32px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.05)]"
+      aria-hidden="true"
+    />
 
-    <!-- Nav bar -->
-    <nav class="bottom-nav" role="navigation" aria-label="主導航">
-      <!-- Left two items -->
+    <nav class="pointer-events-auto relative z-[2] flex h-[60px] items-end justify-around px-1" role="navigation" aria-label="主导航">
       <button
         v-for="item in leftItems"
         :key="item.key"
-        class="nav-item"
-        :class="{ 'is-active': activeKey === item.key }"
+        type="button"
+        class="group relative flex h-full flex-1 cursor-pointer flex-col items-center justify-center gap-[3px] border-none bg-transparent p-0 text-[var(--color-subtle-light)] transition-[color,transform] duration-[220ms] [transition-timing-function:cubic-bezier(0.34,1.56,0.64,1)] [-webkit-tap-highlight-color:transparent] active:scale-[0.93] active:opacity-75 [@media(hover:hover)]:hover:-translate-y-[3px] [@media(hover:hover)]:hover:text-[var(--color-primary)]"
+        :class="activeKey === item.key ? 'is-active text-[var(--color-primary)]' : ''"
         :aria-label="item.label"
         :aria-current="activeKey === item.key ? 'page' : undefined"
         @click="handleNav(item)"
       >
-        <span class="nav-icon-wrap">
-          <component :is="item.icon" class="nav-icon" />
-          <span v-if="item.badge && item.badge > 0" class="nav-badge" aria-label="`${item.badge} 個項目`">
+        <span class="relative flex items-center justify-center">
+          <component
+            :is="item.icon"
+            class="h-[22px] w-[22px] transition-transform duration-[220ms] [transition-timing-function:cubic-bezier(0.34,1.56,0.64,1)] group-[.is-active]:-translate-y-0.5 group-[.is-active]:scale-[1.12] [@media(hover:hover)]:group-hover:-translate-y-0.5 [@media(hover:hover)]:group-hover:scale-110 [@media(hover:hover)]:group-hover:[filter:drop-shadow(0_0_4px_rgba(44,217,125,0.45))]"
+          />
+          <span
+            v-if="item.badge && item.badge > 0"
+            class="pointer-events-none absolute -right-2 -top-[5px] h-4 min-w-4 rounded-full bg-red-500 px-1 text-center text-[9px] font-bold leading-4 text-white whitespace-nowrap"
+            :aria-label="`${item.badge} 个项目`"
+          >
             {{ item.badge > 99 ? '99+' : item.badge }}
           </span>
         </span>
-        <span class="nav-label">{{ item.label }}</span>
-        <span class="nav-active-bar" />
+        <span class="text-[10px] font-medium leading-none tracking-wide whitespace-nowrap transition-colors duration-[220ms] [@media(hover:hover)]:group-hover:text-[var(--color-primary)]">
+          {{ item.label }}
+        </span>
+        <span
+          class="absolute bottom-0 left-1/2 h-[2.5px] w-0 -translate-x-1/2 rounded-full bg-[var(--color-primary)] opacity-0 transition-[width,opacity] duration-300 [transition-timing-function:cubic-bezier(0.34,1.56,0.64,1)] group-[.is-active]:w-5 group-[.is-active]:opacity-100"
+        />
       </button>
 
-      <!-- Center home button placeholder (keeps layout spacing) -->
-      <div class="nav-home-placeholder" aria-hidden="true" />
+      <div class="pointer-events-none flex-[1.2]" aria-hidden="true" />
 
-      <!-- Right two items -->
       <button
         v-for="item in rightItems"
         :key="item.key"
-        class="nav-item"
-        :class="{ 'is-active': activeKey === item.key }"
+        type="button"
+        class="group relative flex h-full flex-1 cursor-pointer flex-col items-center justify-center gap-[3px] border-none bg-transparent p-0 text-[var(--color-subtle-light)] transition-[color,transform] duration-[220ms] [transition-timing-function:cubic-bezier(0.34,1.56,0.64,1)] [-webkit-tap-highlight-color:transparent] active:scale-[0.93] active:opacity-75 [@media(hover:hover)]:hover:-translate-y-[3px] [@media(hover:hover)]:hover:text-[var(--color-primary)]"
+        :class="activeKey === item.key ? 'is-active text-[var(--color-primary)]' : ''"
         :aria-label="item.label"
         :aria-current="activeKey === item.key ? 'page' : undefined"
         @click="handleNav(item)"
       >
-        <span class="nav-icon-wrap">
-          <component :is="item.icon" class="nav-icon" />
+        <span class="relative flex items-center justify-center">
+          <component
+            :is="item.icon"
+            class="h-[22px] w-[22px] transition-transform duration-[220ms] [transition-timing-function:cubic-bezier(0.34,1.56,0.64,1)] group-[.is-active]:-translate-y-0.5 group-[.is-active]:scale-[1.12] [@media(hover:hover)]:group-hover:-translate-y-0.5 [@media(hover:hover)]:group-hover:scale-110 [@media(hover:hover)]:group-hover:[filter:drop-shadow(0_0_4px_rgba(44,217,125,0.45))]"
+          />
         </span>
-        <span class="nav-label">{{ item.label }}</span>
-        <span class="nav-active-bar" />
+        <span
+          class="text-[10px] font-medium leading-none tracking-wide whitespace-nowrap transition-colors duration-[220ms] [@media(hover:hover)]:group-hover:text-[var(--color-primary)]"
+        >
+          {{ item.label }}
+        </span>
+        <span
+          class="absolute bottom-0 left-1/2 h-[2.5px] w-0 -translate-x-1/2 rounded-full bg-[var(--color-primary)] opacity-0 transition-[width,opacity] duration-300 [transition-timing-function:cubic-bezier(0.34,1.56,0.64,1)] group-[.is-active]:w-5 group-[.is-active]:opacity-100"
+        />
       </button>
     </nav>
 
-    <!-- Floating center HOME button (absolutely positioned above bar) -->
     <button
-      class="nav-home-btn"
-      :class="{ 'is-active': activeKey === 'home' }"
-      aria-label="首頁"
+      type="button"
+      class="group pointer-events-auto absolute bottom-[14px] left-1/2 z-10 flex -translate-x-1/2 cursor-pointer flex-col items-center border-none bg-transparent p-0 [-webkit-tap-highlight-color:transparent] active:[transform:translateX(-50%)_scale(0.9)]"
+      :class="activeKey === 'home' ? 'is-active' : ''"
+      aria-label="首页"
       :aria-current="activeKey === 'home' ? 'page' : undefined"
       @click="handleNav(homeItem)"
     >
-      <span class="nav-home-inner">
-        <HomeIcon class="nav-home-icon" />
+      <span
+        class="flex flex-col items-center gap-1 will-change-transform [animation:bn-home-float_2.2s_ease-in-out_infinite] group-active:[animation:none]"
+      >
+        <span
+          class="relative flex h-[58px] w-[58px] items-center justify-center rounded-full bg-[linear-gradient(150deg,#52f99a_0%,#2cd97d_40%,#1aae60_100%)] shadow-[0_0_0_1px_rgba(44,217,125,0.3),0_5px_18px_rgba(44,217,125,0.45),0_2px_8px_rgba(0,0,0,0.35),inset_0_1.5px_0_rgba(255,255,255,0.38),inset_0_-1px_0_rgba(0,0,0,0.12)] outline outline-[2.5px] outline-white/12 outline-offset-[2px] transition-[box-shadow,transform] duration-200 [transition-timing-function:cubic-bezier(0.34,1.56,0.64,1)] before:pointer-events-none before:absolute before:bottom-[-14px] before:left-1/2 before:z-[-1] before:h-3.5 before:w-14 before:-translate-x-1/2 before:rounded-full before:bg-[radial-gradient(ellipse_at_center,rgba(44,217,125,0.18)_0%,transparent_72%)] before:opacity-100 before:transition-opacity before:duration-200 before:content-[''] [@media(hover:hover)]:group-hover:before:opacity-70 [@media(hover:hover)]:group-hover:scale-[1.04] [@media(hover:hover)]:group-hover:shadow-[0_0_0_1px_rgba(44,217,125,0.4),0_4px_14px_rgba(44,217,125,0.5),0_2px_6px_rgba(0,0,0,0.3),inset_0_1.5px_0_rgba(255,255,255,0.42),inset_0_-1px_0_rgba(0,0,0,0.12)] group-[.is-active]:scale-[1.06] group-[.is-active]:animate-bn-ripple group-[.is-active]:shadow-[0_0_0_1px_rgba(44,217,125,0.5),0_8px_32px_rgba(44,217,125,0.8),0_3px_10px_rgba(0,0,0,0.4),inset_0_1.5px_0_rgba(255,255,255,0.42),inset_0_-1px_0_rgba(0,0,0,0.14)] group-active:scale-[0.91] group-active:shadow-[0_2px_10px_rgba(44,217,125,0.4),0_1px_3px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.25)]"
+        >
+          <HomeIcon class="h-[26px] w-[26px] text-black stroke-[2.2]" />
+        </span>
+        <span
+          class="mt-1 text-[10px] font-semibold leading-none tracking-wide whitespace-nowrap text-[var(--color-primary)] transition-[color,transform,opacity] duration-200 [transition-timing-function:cubic-bezier(0.34,1.56,0.64,1)] [@media(hover:hover)]:group-hover:-translate-y-px [@media(hover:hover)]:group-hover:opacity-100"
+        >
+          首页
+        </span>
       </span>
-      <span class="nav-home-label">首頁</span>
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, defineComponent, h } from 'vue';
+import { computed, defineComponent, h } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useBetStore } from '@/store/module/bet';
-import { useThemeStore } from '@/store/module/theme';
 
 const router = useRouter();
 const route = useRoute();
 const betStore = useBetStore();
-const themeStore = useThemeStore();
-
-// ---- Icon components (inline SVG) ----
 
 const ResultsIcon = defineComponent({
   render: () =>
@@ -117,8 +143,6 @@ const ProfileIcon = defineComponent({
     ]),
 });
 
-// ---- Nav items ----
-
 interface NavItem {
   key: string;
   label: string;
@@ -132,27 +156,26 @@ const betBadge = computed(() => betStore.betsList.length + betStore.comboBetsLis
 
 const homeItem: NavItem = {
   key: 'home',
-  label: '首頁',
+  label: '首页',
   icon: HomeIcon,
   route: '/sports/soccer',
 };
 
 const leftItems = computed<NavItem[]>(() => [
-  { key: 'match-result', label: '賽事結果', icon: ResultsIcon, route: '/match-result' },
-  { key: 'bet-slip',     label: '投注單',   icon: BetSlipIcon,  action: () => { betStore.floatBetting = true; }, badge: betBadge.value },
+  { key: 'match-result', label: '赛事结果', icon: ResultsIcon, route: '/match-result' },
+  { key: 'bet-slip', label: '投注单', icon: BetSlipIcon, action: () => { betStore.floatBetting = true; }, badge: betBadge.value },
 ]);
 
 const rightItems = computed<NavItem[]>(() => [
-  { key: 'bet-history', label: '投注紀錄', icon: HistoryIcon, route: '/bet-history' },
-  { key: 'profile',     label: '我的',     icon: ProfileIcon, route: '/profile' },
+  { key: 'bet-history', label: '投注记录', icon: HistoryIcon, route: '/bet-history' },
+  { key: 'profile', label: '我的', icon: ProfileIcon, route: '/profile' },
 ]);
 
-// Derive active key from current route
 const activeKey = computed(() => {
   const path = route.path;
-  if (path.startsWith('/sports'))       return 'home';
+  if (path.startsWith('/sports')) return 'home';
   if (path.startsWith('/match-result')) return 'match-result';
-  if (path.startsWith('/bet-history'))  return 'bet-history';
+  if (path.startsWith('/bet-history')) return 'bet-history';
   return '';
 });
 
@@ -163,350 +186,8 @@ function handleNav(item: NavItem) {
     router.push(item.route);
   }
 }
-
-
 </script>
 
-<style scoped lang="scss">
-/* ---- Layout wrapper ---- */
-.bottom-nav-wrapper {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-  pointer-events: none;
-}
+<script setup lang="ts">
 
-/* ---- Frosted glass base ---- */
-/* Full-width, fully opaque frosted panel — backdrop-filter blurs page content behind it. */
-.bottom-nav-glass {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 72px;
-  /* frosted tint — dark mode */
-  background: rgba(15, 18, 19, 0.82);
-  backdrop-filter: blur(28px) saturate(1.9) brightness(0.85);
-  -webkit-backdrop-filter: blur(28px) saturate(1.9) brightness(0.85);
-  /* top edge: green LED line + glass shine */
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow:
-    0 -1px 0 0 rgba(44, 217, 125, 0.25),
-    0 -8px 32px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  pointer-events: none;
-  z-index: 0;
-}
-
-:global(html:not(.dark)) .bottom-nav-glass {
-  background: rgba(240, 244, 245, 0.85);
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow:
-    0 -1px 0 0 rgba(44, 217, 125, 0.2),
-    0 -8px 32px rgba(0, 0, 0, 0.12),
-    inset 0 1px 0 rgba(255, 255, 255, 0.6);
-}
-
-/* ---- Nav bar ---- */
-.bottom-nav {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-around;
-  height: 60px;
-  padding: 0 4px;
-  pointer-events: all;
-}
-
-/* ---- Individual nav item ---- */
-.nav-item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  height: 100%;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  position: relative;
-  color: var(--color-subtle-light);
-  transition:
-    color 0.22s ease,
-    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
-  -webkit-tap-highlight-color: transparent;
-
-  /* Hover: slight upward float + green tint */
-  @media (hover: hover) {
-    &:hover {
-      color: var(--color-primary);
-      transform: translateY(-3px);
-
-      .nav-icon {
-        transform: translateY(-2px) scale(1.1);
-        filter: drop-shadow(0 0 4px rgba(44, 217, 125, 0.45));
-      }
-
-      .nav-label {
-        color: var(--color-primary);
-      }
-    }
-  }
-
-  &:active {
-    opacity: 0.75;
-    transform: scale(0.93);
-  }
-
-  &.is-active {
-    color: var(--color-primary);
-
-    .nav-active-bar {
-      opacity: 1;
-      width: 20px;
-    }
-  }
-}
-
-/* ---- Icon wrap (for badge positioning) ---- */
-.nav-icon-wrap {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.nav-icon {
-  width: 22px;
-  height: 22px;
-  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
-
-  .is-active & {
-    transform: translateY(-2px) scale(1.12);
-  }
-}
-
-/* ---- Badge ---- */
-.nav-badge {
-  position: absolute;
-  top: -5px;
-  right: -8px;
-  min-width: 16px;
-  height: 16px;
-  padding: 0 4px;
-  border-radius: 9999px;
-  background-color: #ef4444;
-  color: #fff;
-  font-size: 9px;
-  font-weight: 700;
-  line-height: 16px;
-  text-align: center;
-  white-space: nowrap;
-  pointer-events: none;
-}
-
-/* ---- Label ---- */
-.nav-label {
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  line-height: 1;
-  transition: color 0.22s ease;
-  white-space: nowrap;
-}
-
-/* ---- Active indicator bar ---- */
-.nav-active-bar {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 2.5px;
-  background-color: var(--color-primary);
-  border-radius: 9999px;
-  opacity: 0;
-  transition: width 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
-}
-
-/* ---- Center placeholder to hold space in flex row ---- */
-.nav-home-placeholder {
-  flex: 1.2;
-  pointer-events: none;
-}
-
-/* ---- Float keyframe — used on home button hover ---- */
-@keyframes btn-float {
-  0%   { transform: translateX(-50%) translateY(0); }
-  50%  { transform: translateX(-50%) translateY(-5px); }
-  100% { transform: translateX(-50%) translateY(0); }
-}
-
-/* ---- Floating home button ---- */
-.nav-home-btn {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 14px;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  pointer-events: all;
-  -webkit-tap-highlight-color: transparent;
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-
-  /* Hover: trigger smooth floating animation */
-  @media (hover: hover) {
-    &:hover {
-      animation: btn-float 1.6s ease-in-out infinite;
-
-      .nav-home-inner {
-        /* Tighter, more focused glow — reduced halo size */
-        box-shadow:
-          0 0 0 1px rgba(44, 217, 125, 0.4),
-          0 4px 14px rgba(44, 217, 125, 0.5),
-          0 2px 6px rgba(0, 0, 0, 0.3),
-          inset 0 1.5px 0 rgba(255, 255, 255, 0.42),
-          inset 0 -1px 0 rgba(0, 0, 0, 0.12);
-        transform: scale(1.04);
-      }
-
-      .nav-home-label {
-        opacity: 1;
-        transform: translateY(-1px);
-      }
-    }
-  }
-
-  &:active {
-    animation: none;
-    transform: translateX(-50%) scale(0.9);
-  }
-
-  /* Radial halo on the glass bar surface behind the button */
-  &::before {
-    content: '';
-    position: absolute;
-    bottom: -14px;
-    left: 50%;
-    transform: translateX(-50%);
-    /* Reduced halo footprint */
-    width: 56px;
-    height: 14px;
-    background: radial-gradient(ellipse at center, rgba(44, 217, 125, 0.18) 0%, transparent 72%);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: -1;
-    transition: opacity 0.25s ease;
-  }
-
-  /* Halo intensifies subtly on hover */
-  @media (hover: hover) {
-    &:hover::before {
-      opacity: 0.7;
-    }
-  }
-}
-
-.nav-home-inner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  /* premium layered green gradient */
-  background: linear-gradient(150deg, #52f99a 0%, #2cd97d 40%, #1aae60 100%);
-  /* outer ring for separation from bar */
-  outline: 2.5px solid rgba(255, 255, 255, 0.12);
-  outline-offset: 2px;
-  /* default glow — moderate, not oversized */
-  box-shadow:
-    0 0 0 1px rgba(44, 217, 125, 0.3),
-    0 5px 18px rgba(44, 217, 125, 0.45),
-    0 2px 8px rgba(0, 0, 0, 0.35),
-    inset 0 1.5px 0 rgba(255, 255, 255, 0.38),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.12);
-  transition:
-    box-shadow 0.25s ease,
-    transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-
-  .nav-home-btn.is-active & {
-    box-shadow:
-      0 0 0 1px rgba(44, 217, 125, 0.5),
-      0 8px 32px rgba(44, 217, 125, 0.8),
-      0 3px 10px rgba(0, 0, 0, 0.4),
-      inset 0 1.5px 0 rgba(255, 255, 255, 0.42),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.14);
-    transform: scale(1.06);
-  }
-
-  .nav-home-btn:active & {
-    transform: scale(0.91);
-    box-shadow:
-      0 2px 10px rgba(44, 217, 125, 0.4),
-      0 1px 3px rgba(0, 0, 0, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  }
-}
-
-.nav-home-icon {
-  width: 26px;
-  height: 26px;
-  color: #000;
-  stroke-width: 2.2px;
-}
-
-.nav-home-label {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--color-primary);
-  line-height: 1;
-  white-space: nowrap;
-  transition:
-    color 0.2s ease,
-    transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
-    opacity 0.2s ease;
-
-  .nav-home-btn.is-active & {
-    color: var(--color-primary);
-  }
-}
-
-/* ---- Ripple animation on active state — reduced max spread ---- */
-@keyframes ripple-out {
-  0%   {
-    box-shadow:
-      0 0 0 0   rgba(44, 217, 125, 0.5),
-      0 5px 18px rgba(44, 217, 125, 0.45),
-      0 2px 8px  rgba(0, 0, 0, 0.35),
-      inset 0 1.5px 0 rgba(255, 255, 255, 0.38),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.12);
-  }
-  100% {
-    box-shadow:
-      0 0 0 8px rgba(44, 217, 125, 0),
-      0 5px 18px rgba(44, 217, 125, 0.45),
-      0 2px 8px  rgba(0, 0, 0, 0.35),
-      inset 0 1.5px 0 rgba(255, 255, 255, 0.38),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.12);
-  }
-}
-
-.nav-home-btn.is-active .nav-home-inner {
-  animation: ripple-out 1.6s ease-out infinite;
-}
-</style>
+</script>
