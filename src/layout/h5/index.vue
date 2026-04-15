@@ -7,7 +7,7 @@
       <SportsCategoryBar />
 
       <!-- 時間分類選單 -->
-      <TimeFilterBar />
+      <TimeFilterBar :counts="tabCounts" />
 
       <!-- 賽事列表 -->
       <div class="match-list">
@@ -33,11 +33,26 @@ import MobileLayoutHeader from './MobileLayoutHeader.vue';
 import SportsCategoryBar from './SportsCategoryBar.vue';
 import TimeFilterBar from './TimeFilterBar.vue';
 import MatchEventCard, { type MatchEvent } from './MatchEventCard.vue';
+import { computed } from 'vue';
 
 const handleMoreMarkets = (id: string) => { /* TODO: navigate */ };
 const handleOpenVideo   = (id: string) => { /* TODO: open video */ };
 const handleOpenAni     = (id: string) => { /* TODO: open animation */ };
 const handleOpenStats   = (id: string) => { /* TODO: open stats */ };
+
+// Derive per-tab match counts from the match list.
+// Replace demoMatches with a reactive ref/store in production.
+const tabCounts = computed<Record<string, number>>(() => {
+  const liveCount  = demoMatches.filter((m) => m.isLive).length;
+  const todayCount = demoMatches.filter((m) => !m.isLive && m.time?.startsWith('今日')).length;
+  const earlyCount = demoMatches.filter((m) => !m.isLive && !m.time?.startsWith('今日')).length;
+  return {
+    hot:   demoMatches.length,   // 熱門 = all available matches
+    roll:  liveCount,            // 滾球 = live only
+    today: todayCount,           // 今日 = scheduled today
+    early: earlyCount,           // 早盤 = future / other days
+  };
+});
 
 const demoMatches: MatchEvent[] = [
   {

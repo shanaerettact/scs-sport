@@ -10,13 +10,31 @@
       :aria-pressed="activeTab === tab.key"
     >
       <span class="time-tab__dot" v-if="tab.key === 'roll'" />
-      <span>{{ tab.label }}</span>
+      <span class="time-tab__label">{{ tab.label }}</span>
+      <span
+        v-if="counts[tab.key] !== undefined && counts[tab.key] > 0"
+        class="time-tab__badge"
+        :class="{
+          'is-live': tab.key === 'roll',
+          'is-active-badge': activeTab === tab.key,
+        }"
+        aria-label="`${counts[tab.key]} 場賽事`"
+      >{{ counts[tab.key] }}</span>
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
+
+withDefaults(
+  defineProps<{
+    counts?: Record<string, number>;
+  }>(),
+  {
+    counts: () => ({}),
+  }
+);
 
 const activeTab = ref('roll');
 
@@ -64,6 +82,11 @@ const tabs = [
   }
 }
 
+.time-tab__label {
+  /* keeps label and badge on one line */
+  white-space: nowrap;
+}
+
 .time-tab__dot {
   width: 7px;
   height: 7px;
@@ -71,6 +94,43 @@ const tabs = [
   background-color: #ef4444;
   animation: blink 1.4s ease-in-out infinite;
   flex-shrink: 0;
+}
+
+/* Count badge */
+.time-tab__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 16px;
+  padding: 0 5px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+  background-color: var(--color-surface-hover);
+  color: var(--color-subtle);
+  transition: background-color 0.2s, color 0.2s;
+  flex-shrink: 0;
+
+  /* Live / 滾球 tab: red badge */
+  &.is-live {
+    background-color: rgba(239, 68, 68, 0.18);
+    color: #f87171;
+  }
+
+  /* When the tab itself is active, badge inherits brand colour */
+  &.is-active-badge {
+    background-color: rgba(44, 217, 125, 0.18);
+    color: var(--color-primary);
+  }
+
+  /* Live + active: keep red tint but slightly brighter */
+  &.is-live.is-active-badge {
+    background-color: rgba(239, 68, 68, 0.26);
+    color: #fc8181;
+  }
 }
 
 @keyframes blink {
