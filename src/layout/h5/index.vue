@@ -1,8 +1,9 @@
 <template>
-  <div class="relative flex min-h-dvh flex-col bg-[var(--color-background-color)] dark:bg-[rgb(16,16,20)]">
+  <div class="relative flex min-h-dvh flex-col bg-[var(--color-background-color)]">
     <MobileLayoutHeader />
-    <main class="flex-1 overflow-y-auto pb-[calc(60px+env(safe-area-inset-bottom,0px))]"></main>
-
+    <main class="flex-1 overflow-y-auto pb-[calc(60px+env(safe-area-inset-bottom,0px))]">
+      <slot />
+    </main>
     <BottomNav />
   </div>
 </template>

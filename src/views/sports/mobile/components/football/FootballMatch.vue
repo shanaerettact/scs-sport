@@ -1,130 +1,177 @@
 <template>
-  <div class="bg-surface rounded-sm p-2">
-    <div class="flex items-center justify-between mb-2">
-      <div class="flex items-center gap-1">
-        <img :src="match.leagueLogo" alt="" onerror="this.src='/images/sports/league.png'" class="w-4 h-4 object-contain">
-        <span>{{ match.leagueName }}</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <div class="flex items-center">
-          <template v-if="match.matchPeriodStartTime <= 0">{{ dayjs(match.matchTime).format('YYYY-MM-DD') }}</template>
-          <template v-else-if="match.matchPeriodId == ''">{{ $t('label.inPlay') }}</template>
-          <template v-else>{{ match.matchPeriodName }}</template>
-        </div>
-        <div class="flex items-center">
-          <template v-if="match.matchPeriodStartTime > 0">{{ getInPlayDuration(match.matchPeriodStartTime) }}</template>
-          <template v-else>{{ dayjs(match.matchTime).format('HH:mm') }}</template>
-        </div>
+  <div class="match-card">
+    <!-- ── League header ── -->
+    <div class="league-header">
+      <img
+        :src="match.leagueLogo"
+        alt=""
+        onerror="this.src='/images/sports/league.png'"
+        class="w-[14px] h-[14px] object-contain rounded-sm opacity-90"
+      />
+      <span class="text-[11px] font-medium text-subtle truncate flex-1">{{ match.leagueName }}</span>
+
+      <!-- Status / time pill -->
+      <div class="flex items-center gap-1.5 ml-auto shrink-0">
+        <template v-if="match.matchPeriodStartTime > 0">
+          <span class="live-badge">LIVE</span>
+          <span class="text-[11px] font-semibold text-red-500">
+            {{ match.matchPeriodId == '' ? $t('label.inPlay') : match.matchPeriodName }}
+          </span>
+          <span class="text-[11px] font-mono text-subtle-light tabular-nums">{{ getInPlayDuration(match.matchPeriodStartTime) }}</span>
+        </template>
+        <template v-else>
+          <span class="text-[11px] text-subtle-light tabular-nums">{{ dayjs(match.matchTime).format('MM/DD') }}</span>
+          <span class="text-[11px] font-semibold text-subtle tabular-nums">{{ dayjs(match.matchTime).format('HH:mm') }}</span>
+        </template>
       </div>
     </div>
 
-    <div class="grid grid-cols-5 gap-2">
-      <!-- 左側隊伍 -->
-      <div class="col-span-2 grid grid-rows-[20px_repeat(3,_minmax(0,1fr))]">
-        <div></div>
-        <div class="flex items-center gap-2 min-w-0">
-          <img :src="match.homeTeamLogo" alt="" class="h-6 w-6 object-contain" onerror="this.src='/images/sports/homeTeam.png'" />
-          <div class="truncate">{{ match.homeTeamName }}</div>
+    <!-- ── Teams + Odds grid ── -->
+    <div class="p-2.5">
+      <div class="grid grid-cols-5 gap-2">
+        <!-- Left: team names -->
+        <div class="col-span-2 flex flex-col justify-between gap-1 pr-1">
+          <!-- market header spacer -->
+          <div class="h-5"></div>
+          <div class="flex items-center gap-1.5 min-w-0 py-0.5">
+            <img
+              :src="match.homeTeamLogo"
+              alt=""
+              class="h-[22px] w-[22px] object-contain rounded-sm flex-shrink-0"
+              onerror="this.src='/images/sports/homeTeam.png'"
+            />
+            <span class="truncate text-[12.5px] font-semibold text-main leading-tight">{{ match.homeTeamName }}</span>
+          </div>
+          <div class="flex items-center gap-1.5 min-w-0 py-0.5">
+            <img
+              :src="match.awayTeamLogo"
+              alt=""
+              class="h-[22px] w-[22px] object-contain rounded-sm flex-shrink-0"
+              onerror="this.src='/images/sports/awayTeam.png'"
+            />
+            <span class="truncate text-[12.5px] font-semibold text-main leading-tight">{{ match.awayTeamName }}</span>
+          </div>
         </div>
-        <div class="flex items-center gap-2 min-w-0">
-          <img :src="match.awayTeamLogo" alt="" class="h-6 w-6 object-contain" onerror="this.src='/images/sports/awayTeam.png'" />
-          <div class="truncate">{{ match.awayTeamName }}</div>
-        </div>
-      </div>
 
-      <!-- 右側投注項目 -->
-      <template v-for="[marketMapKey, marketMapItem] in marketMap" :key="marketMapKey">
-        <div>
-          <div class="text-center">{{ $t(`market_id.${marketMapKey}`) }}</div>
-          <div class="flex flex-col gap-1 text-xs">
+        <!-- Right: odds columns -->
+        <template v-for="[marketMapKey, marketMapItem] in marketMap" :key="marketMapKey">
+          <div class="flex flex-col gap-1">
+            <!-- Market label -->
+            <div class="text-center text-[10px] font-medium text-subtle-light h-5 flex items-center justify-center leading-tight">
+              {{ $t(`market_id.${marketMapKey}`) }}
+            </div>
+            <!-- Outcome buttons -->
             <template v-for="[outcomeMapKey, outcomeMapItem] in marketMapItem.outcomeMap" :key="outcomeMapKey">
               <template v-if="getMarket(match, marketMapKey)">
-                <div class="min-h-10 flex flex-col items-center rounded-md bg-outcome bg-surface-hover p-1 cursor-pointer" @click="betStore.setBetsList(match.leagueId, match, getMarket(match, marketMapKey), getOutcome(match, marketMapKey, outcomeMapKey))">
-                  <div class="text-center">
+                <div
+                  class="outcome-btn min-h-[38px] flex flex-col items-center justify-center px-1 py-1"
+                  :class="{
+                    'odds-up':   getOddsChange(match, marketMapKey, outcomeMapKey) === 'up',
+                    'odds-down': getOddsChange(match, marketMapKey, outcomeMapKey) === 'down',
+                  }"
+                  @click="betStore.setBetsList(match.leagueId, match, getMarket(match, marketMapKey), getOutcome(match, marketMapKey, outcomeMapKey))"
+                >
+                  <div class="text-center text-[10px] text-subtle leading-tight">
                     <span v-if="marketMapKey == '1'">{{ $t(`outcome_id.${outcomeMapKey}`) }}</span>
                     <span>{{ getOutcome(match, marketMapKey, outcomeMapKey)?.teamHandicap ?? '' }}</span>
                   </div>
-                  <div class="font-bold m-auto space-x-1" :class="{
-                    'text-green-500': getOddsChange(match, marketMapKey, outcomeMapKey) === 'up',
-                    'text-red-500': getOddsChange(match, marketMapKey, outcomeMapKey) === 'down',
-                  }">
+                  <div
+                    class="font-bold text-[13px] leading-tight flex items-center gap-0.5"
+                    :class="{
+                      'text-emerald-500': getOddsChange(match, marketMapKey, outcomeMapKey) === 'up',
+                      'text-red-500':     getOddsChange(match, marketMapKey, outcomeMapKey) === 'down',
+                      'text-main':        getOddsChange(match, marketMapKey, outcomeMapKey) === 'same',
+                    }"
+                  >
                     <span>{{ getOutcome(match, marketMapKey, outcomeMapKey)?.odds ?? '-' }}</span>
-                    <n-icon size="10" v-html="Triangle12Filled" v-if="getOddsChange(match, marketMapKey, outcomeMapKey) !== 'same'" :class="{ 'rotate-180': getOddsChange(match, marketMapKey, outcomeMapKey) === 'down' }" />
+                    <n-icon
+                      size="8"
+                      v-html="Triangle12Filled"
+                      v-if="getOddsChange(match, marketMapKey, outcomeMapKey) !== 'same'"
+                      :class="{ 'rotate-180': getOddsChange(match, marketMapKey, outcomeMapKey) === 'down' }"
+                    />
                   </div>
                 </div>
               </template>
               <template v-else>
-                <div class="min-h-10 flex-1 inline-flex items-center justify-center rounded-md bg-outcome p-1">
-                  <n-icon size="15" v-html="Lock"></n-icon>
+                <div class="outcome-btn min-h-[38px] flex items-center justify-center opacity-50">
+                  <n-icon size="14" v-html="Lock" />
                 </div>
               </template>
             </template>
           </div>
-        </div>
-      </template>
+        </template>
+      </div>
     </div>
 
-    <div class="flex items-center mt-1">
-      <div class="flex items-center gap-1 text-xs cursor-pointer text-blue-400" @click="matchStore.handleMoreBets(match.matchId, 'score')">
+    <!-- ── Footer: more markets + icons ── -->
+    <div class="section-divider"></div>
+    <div class="flex items-center px-2.5 py-1.5 gap-2">
+      <button
+        class="flex items-center gap-1 text-[11px] font-medium text-[var(--color-primary)] cursor-pointer bg-transparent border-none p-0 leading-none"
+        @click="matchStore.handleMoreBets(match.matchId, 'score')"
+      >
         <span>{{ $t('label.moreMarkets') }}</span>
-        <span>{{ match.extraMarketCount }}</span>
-        <n-icon size="9" v-html="Triangle12Filled" class="rotate-90"></n-icon>
-      </div>
-      <div class="flex items-center gap-2 ml-auto">
-        <n-icon size="24" v-html="Shipin" class="cursor-pointer" @click="matchStore.handleMoreBets(match.matchId, 'live')" v-if="match.videoInfo.hasVideo"></n-icon>
-        <n-icon size="24" v-html="Donghua" class="cursor-pointer" @click="matchStore.handleMoreBets(match.matchId, 'ani')" v-if="match.animationInfo.hasAnimation"></n-icon>
-        <n-icon size="24" v-html="Shuju" class="cursor-pointer" @click="matchStore.handleMoreBets(match.matchId, 'score')"></n-icon>
-      </div>
-    </div>
+        <span class="opacity-70">{{ match.extraMarketCount }}</span>
+        <n-icon size="8" v-html="Triangle12Filled" class="rotate-90 opacity-70" />
+      </button>
 
-    <div class="flex items-center gap-2 mt-1 text-xs" v-if="matchTimeType == 1">
-      <div class="flex">
-        <n-tooltip trigger="hover">
-          <template #trigger>
-            <img class="w-4 h-4" src="/images/football-icon/full-corner.png"></img>
-          </template>
-          {{ $t('label.corner') }}
-        </n-tooltip>
-        <span>{{ match.footballData?.homeCorner ?? '-' }}</span>
-        <span>：</span>
-        <span>{{ match.footballData?.awayCorner ?? '-' }}</span>
+      <!-- Live stats footer (football in-play) -->
+      <div class="flex items-center gap-2 text-[11px] text-subtle-light ml-auto" v-if="matchTimeType == 1">
+        <div class="flex items-center gap-0.5">
+          <n-tooltip trigger="hover">
+            <template #trigger>
+              <img class="w-3.5 h-3.5" src="/images/football-icon/full-score.png" />
+            </template>
+            {{ $t('label.score') }}
+          </n-tooltip>
+          <span class="font-semibold text-main">{{ match.footballData?.homeScore ?? '-' }}</span>
+          <span class="opacity-50">:</span>
+          <span class="font-semibold text-main">{{ match.footballData?.awayScore ?? '-' }}</span>
+        </div>
+        <div class="flex items-center gap-0.5">
+          <n-tooltip trigger="hover">
+            <template #trigger>
+              <img class="w-3.5 h-3.5" src="/images/football-icon/full-corner.png" />
+            </template>
+            {{ $t('label.corner') }}
+          </n-tooltip>
+          <span>{{ match.footballData?.homeCorner ?? '-' }}</span>
+          <span class="opacity-50">:</span>
+          <span>{{ match.footballData?.awayCorner ?? '-' }}</span>
+        </div>
+        <div class="flex items-center gap-0.5">
+          <n-tooltip trigger="hover">
+            <template #trigger>
+              <img class="w-3.5 h-3.5" src="/images/football-icon/full-yellow.png" />
+            </template>
+            {{ $t('label.yellowCard') }}
+          </n-tooltip>
+          <span>{{ match.footballData?.homeYellowCard ?? '-' }}</span>
+          <span class="opacity-50">:</span>
+          <span>{{ match.footballData?.awayYellowCard ?? '-' }}</span>
+        </div>
+        <div class="flex items-center gap-0.5">
+          <n-tooltip trigger="hover">
+            <template #trigger>
+              <img class="w-3.5 h-3.5" src="/images/football-icon/full-red.png" />
+            </template>
+            {{ $t('label.redCard') }}
+          </n-tooltip>
+          <span>{{ match.footballData?.homeRedCard ?? '-' }}</span>
+          <span class="opacity-50">:</span>
+          <span>{{ match.footballData?.awayRedCard ?? '-' }}</span>
+        </div>
       </div>
-      <div class="flex">
-        <n-tooltip trigger="hover">
-          <template #trigger>
-            <img class="w-4 h-4" src="/images/football-icon/full-red.png"></img>
-          </template>
-          {{ $t('label.redCard') }}
-        </n-tooltip>
-        <span>{{ match.footballData?.homeRedCard ?? '-' }}</span>
-        <span>：</span>
-        <span>{{ match.footballData?.awayRedCard ?? '-' }}</span>
-      </div>
-      <div class="flex">
-        <n-tooltip trigger="hover">
-          <template #trigger>
-            <img class="w-4 h-4" src="/images/football-icon/full-yellow.png"></img>
-          </template>
-          {{ $t('label.yellowCard') }}
-        </n-tooltip>
-        <span>{{ match.footballData?.homeYellowCard ?? '-' }}</span>
-        <span>：</span>
-        <span>{{ match.footballData?.awayYellowCard ?? '-' }}</span>
-      </div>
-      <div class="flex">
-        <n-tooltip trigger="hover">
-          <template #trigger>
-            <img class="w-4 h-4" src="/images/football-icon/full-score.png"></img>
-          </template>
-          {{ $t('label.score') }}
-        </n-tooltip>
-        <span>{{ match.footballData?.homeScore ?? '-' }}</span>
-        <span>：</span>
-        <span>{{ match.footballData?.awayScore ?? '-' }}</span>
+
+      <!-- Media icons -->
+      <div class="flex items-center gap-2 text-subtle-light" :class="matchTimeType == 1 ? '' : 'ml-auto'">
+        <n-icon size="20" v-html="Shipin" class="cursor-pointer hover:text-[var(--color-primary)] transition-colors" @click="matchStore.handleMoreBets(match.matchId, 'live')" v-if="match.videoInfo.hasVideo" />
+        <n-icon size="20" v-html="Donghua" class="cursor-pointer hover:text-[var(--color-primary)] transition-colors" @click="matchStore.handleMoreBets(match.matchId, 'ani')" v-if="match.animationInfo.hasAnimation" />
+        <n-icon size="20" v-html="Shuju" class="cursor-pointer hover:text-[var(--color-primary)] transition-colors" @click="matchStore.handleMoreBets(match.matchId, 'score')" />
       </div>
     </div>
   </div>
-
 </template>
 
 <script setup lang="ts">

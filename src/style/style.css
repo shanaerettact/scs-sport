@@ -12,34 +12,61 @@
   }
 }
 
+/* Odds pulse on value change */
+@keyframes odds-pulse-up {
+  0%   { background-color: rgba(44, 217, 125, 0.22); }
+  100% { background-color: transparent; }
+}
+@keyframes odds-pulse-down {
+  0%   { background-color: rgba(239, 68, 68, 0.22); }
+  100% { background-color: transparent; }
+}
+
+/* Shimmer skeleton for live badge */
+@keyframes live-pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
 :root {
   --color-primary: #2cd97d;
-  --color-background-color: #f4f5fa;
-  --color-surface: #FAFCFF;
-  --color-surface-hover: #e0e0e0;
-  --color-surface-soft: #FCFEFF;
+  --color-primary-dim: rgba(44, 217, 125, 0.12);
+  --color-primary-glow: rgba(44, 217, 125, 0.35);
+  --color-background-color: #f0f2f7;
+  --color-surface: #ffffff;
+  --color-surface-hover: #e4e8ee;
+  --color-surface-soft: #f6f8fc;
   --color-bet-panel: #fff;
-  --color-main: #000000;
+  --color-main: #0d1117;
   --color-subtle: #4b5563;
   --color-subtle-light: #9ca3af;
-  --color-outcome-background: #eef1f3;
-  --color-side-outcome-background: #eef1f3;
+  --color-outcome-background: #eef1f6;
+  --color-side-outcome-background: #eef1f6;
+  --color-card-border: rgba(0, 0, 0, 0.06);
+  --color-card-shadow: 0 1px 4px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.05);
+  --color-outcome-border: rgba(0, 0, 0, 0.06);
 }
 
 .dark {
-  --color-primary: #63e2b7;
-  --color-background-color: transparent;
-  --color-surface: #3a4142;
-  --color-surface-hover: #4a5152;
-  --color-surface-soft: #292d2e;
-  --color-bet-panel: #232626;
-  --color-main: #ffffff;
+  --color-primary: #2cd97d;
+  --color-primary-dim: rgba(44, 217, 125, 0.10);
+  --color-primary-glow: rgba(44, 217, 125, 0.30);
+  --color-background-color: #0f1213;
+  --color-surface: #1c2022;
+  --color-surface-hover: #272d2f;
+  --color-surface-soft: #161a1b;
+  --color-bet-panel: #161a1b;
+  --color-main: #f0f2f5;
   --color-subtle: #9ca3af;
-  --color-subtle-light: #d1d5db;
-  --color-outcome-background: #292d2e;
-  --color-side-outcome-background: #202324;
+  --color-subtle-light: #6b7280;
+  --color-outcome-background: #212627;
+  --color-side-outcome-background: #191e1f;
+  --color-card-border: rgba(255, 255, 255, 0.06);
+  --color-card-shadow: 0 1px 4px rgba(0,0,0,0.3), 0 4px 20px rgba(0,0,0,0.25);
+  --color-outcome-border: rgba(255, 255, 255, 0.06);
 }
 
+/* ─── Semantic utility classes ─── */
 .bg-surface {
   background-color: var(--color-surface);
 }
@@ -88,31 +115,148 @@
   background-color: var(--color-surface-hover);
 }
 
+/* ─── Sport filter pill buttons ─── */
 .sport-filter-btn {
   display: flex;
   align-items: center;
   border: 1px solid transparent;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: background-color 0.2s, color 0.2s;
-  padding: 0.5rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+              box-shadow 0.2s ease, transform 0.15s ease;
+  padding: 0.375rem 0.875rem;
   white-space: nowrap;
   flex-shrink: 0;
   cursor: pointer;
+  letter-spacing: 0.01em;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sport-filter-btn:active {
+  transform: scale(0.95);
 }
 
 .sport-filter-btn.is-active {
   background-color: var(--color-primary);
-  color: black;
+  color: #000;
+  border-color: transparent;
+  box-shadow: 0 0 0 3px var(--color-primary-glow),
+              0 2px 8px rgba(44, 217, 125, 0.3);
 }
 
 .sport-filter-btn:not(.is-active) {
-  background-color: var(--color-surface-soft);
-  color: var(--color-main);
-  border-color: var(--color-surface-hover);
+  background-color: var(--color-surface);
+  color: var(--color-subtle);
+  border-color: var(--color-card-border);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 
 .sport-filter-btn:not(.is-active):hover {
   background-color: var(--color-surface-hover);
+  color: var(--color-main);
+  border-color: rgba(44, 217, 125, 0.3);
+}
+
+/* ─── Match card ─── */
+.match-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-card-border);
+  border-radius: 0.75rem;
+  box-shadow: var(--color-card-shadow);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.match-card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10), 0 8px 28px rgba(0,0,0,0.09);
+}
+
+/* ─── Odds outcome button ─── */
+.outcome-btn {
+  background-color: var(--color-outcome-background);
+  border: 1px solid var(--color-outcome-border);
+  border-radius: 0.5rem;
+  transition: background-color 0.18s ease, border-color 0.18s ease,
+              transform 0.12s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.18s ease;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.outcome-btn:hover {
+  background-color: var(--color-surface-hover);
+  border-color: rgba(44, 217, 125, 0.3);
+}
+
+.outcome-btn:active {
+  transform: scale(0.94);
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.12);
+}
+
+.outcome-btn.selected {
+  background-color: var(--color-primary-dim);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-glow);
+}
+
+/* Odds flash animations */
+.odds-up   { animation: odds-pulse-up   0.7s ease-out; }
+.odds-down { animation: odds-pulse-down 0.7s ease-out; }
+
+/* ─── Live badge ─── */
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 9999px;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.125rem 0.4rem;
+  text-transform: uppercase;
+}
+
+.live-badge::before {
+  content: '';
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #ef4444;
+  animation: live-pulse 1.4s ease-in-out infinite;
+}
+
+/* ─── League header strip ─── */
+.league-header {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--color-surface-soft);
+  border-bottom: 1px solid var(--color-card-border);
+}
+
+/* ─── Hide scrollbar utility ─── */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Section divider ─── */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--color-card-border) 20%,
+    var(--color-card-border) 80%,
+    transparent
+  );
+  margin: 0 0.75rem;
 }

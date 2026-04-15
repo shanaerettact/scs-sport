@@ -1,37 +1,76 @@
 <template>
-  <div class="px-3 space-y-5 relative overflow-hidden" v-if="!matchStore.collapseSide">
-    <!-- <div>
-      <HotCarousel />
-    </div> -->
+  <div class="relative overflow-hidden" v-if="!matchStore.collapseSide">
 
-    <div>
-      <div class="flex gap-3 overflow-scroll">
+    <!-- ── Filter bar ── -->
+    <div class="sticky top-[52px] z-[80] bg-[var(--color-background-color)] px-3 pt-3 pb-2 shadow-[0_1px_0_0_var(--color-card-border)]">
+      <!-- Time type pills -->
+      <div class="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
         <template v-for="[key, item] in matchStore.filterMap">
-          <div @click="timeFilter(key);" class="sport-filter-btn" :class="{ 'is-active': key === matchStore.filterType }">
+          <div
+            @click="timeFilter(key)"
+            class="sport-filter-btn"
+            :class="{ 'is-active': key === matchStore.filterType }"
+          >
             {{ $t(`matchTime_type.${item.matchTimeType}`) }}
-            <template v-if="item.matchTimeType == 1">({{ matchStore.respSportMatchCount.inPlayCount }})</template>
-            <template v-if="item.matchTimeType == 2">({{ matchStore.respSportMatchCount.todayCount }})</template>
-            <template v-if="item.matchTimeType == 3">({{ matchStore.respSportMatchCount.earlyCount }})</template>
-            <template v-if="item.matchTimeType == 4">({{ matchStore.respSportMatchCount.outrightsCount }})</template>
+            <template v-if="item.matchTimeType == 1">
+              <span class="ml-1 text-[10px] opacity-80">({{ matchStore.respSportMatchCount.inPlayCount }})</span>
+            </template>
+            <template v-if="item.matchTimeType == 2">
+              <span class="ml-1 text-[10px] opacity-80">({{ matchStore.respSportMatchCount.todayCount }})</span>
+            </template>
+            <template v-if="item.matchTimeType == 3">
+              <span class="ml-1 text-[10px] opacity-80">({{ matchStore.respSportMatchCount.earlyCount }})</span>
+            </template>
+            <template v-if="item.matchTimeType == 4">
+              <span class="ml-1 text-[10px] opacity-80">({{ matchStore.respSportMatchCount.outrightsCount }})</span>
+            </template>
           </div>
         </template>
       </div>
-      <div class="flex items-center gap-3 overflow-scroll py-2" v-if="matchStore.filterType == 'early'">
+
+      <!-- Early date sub-filter -->
+      <div class="flex items-center gap-2 overflow-x-auto pt-2 scrollbar-none" v-if="matchStore.filterType == 'early'">
         <template v-for="item in matchStore.earlyFilterList">
-          <div class="sport-filter-btn whitespace-nowrap" :class="{ 'is-active': item.start == matchStore.reqSportH5MatchList.startTime }" @click="earlyTimeFilter(item)">{{ item.date }}</div>
+          <div
+            class="sport-filter-btn whitespace-nowrap"
+            :class="{ 'is-active': item.start == matchStore.reqSportH5MatchList.startTime }"
+            @click="earlyTimeFilter(item)"
+          >
+            {{ item.date }}
+          </div>
         </template>
       </div>
     </div>
 
+    <!-- ── Match list ── -->
     <template v-if="matchStore.respSportH5MatchList.datas.length > 0">
-      <n-scrollbar ref="scrollbarRef" :style="{ height: matchStore.filterType != 'early' ? 'calc(100vh - 294px)' : 'calc(100vh - 350px)' }">
-        <div class="mb-2" v-for="(item, index) in matchStore.respSportH5MatchList.datas" :key="item.matchId">
-          <component :is="getSportComponent(userStore.sportType)" :match="item" :prevMatch="matchStore.prevSportH5MatchList" :matchIndex="index" :matchTimeType="matchStore.reqSportH5MatchList.matchTimeType" />
+      <n-scrollbar ref="scrollbarRef" :style="{ height: matchStore.filterType != 'early' ? 'calc(100vh - 168px)' : 'calc(100vh - 224px)' }">
+        <div class="px-3 py-3 flex flex-col gap-3">
+          <component
+            :is="getSportComponent(userStore.sportType)"
+            v-for="(item, index) in matchStore.respSportH5MatchList.datas"
+            :key="item.matchId"
+            :match="item"
+            :prevMatch="matchStore.prevSportH5MatchList"
+            :matchIndex="index"
+            :matchTimeType="matchStore.reqSportH5MatchList.matchTimeType"
+          />
+        </div>
+        <div class="px-3 pb-3">
+          <n-pagination
+            v-model:page="matchStore.reqSportH5MatchList.pageIndex"
+            v-model:page-size="matchStore.reqSportH5MatchList.pageSize"
+            :item-count="matchStore.respSportH5MatchList.total"
+            show-size-picker
+            :page-sizes="[10, 20, 30, 40]"
+            :page-slot="5"
+            size="large"
+            @update:page="handleUpdatePage"
+            class="justify-center"
+          />
         </div>
       </n-scrollbar>
-      <n-pagination v-model:page="matchStore.reqSportH5MatchList.pageIndex" v-model:page-size="matchStore.reqSportH5MatchList.pageSize" :item-count="matchStore.respSportH5MatchList.total" show-size-picker :page-sizes="[10, 20, 30, 40]" :page-slot="5" size="large" @update:page="handleUpdatePage" class="justify-center" />
     </template>
-
 
     <div @click="showRecommend = true" v-if="matchStore.filterType != 'roll'">
       <FloatingRecommendBtn />
