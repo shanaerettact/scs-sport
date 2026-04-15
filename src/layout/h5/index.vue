@@ -12,6 +12,4 @@ import BottomNav from './BottomNav.vue';
 import MobileLayoutHeader from './MobileLayoutHeader.vue';
 </script>
 
-<script setup lang="ts">
-
-</script>
+<style scoped lang="scss"></style>
