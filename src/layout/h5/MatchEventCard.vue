@@ -79,49 +79,71 @@
     </div>
 
     <div class="match-card__footer">
-      <button class="more-markets-btn" @click="$emit('moreMarkets', match.matchId)">
-        更多玩法 {{ match.extraMarketCount }}
-        <svg class="inline-block ml-0.5 w-3 h-3 rotate-90" viewBox="0 0 12 12" fill="currentColor">
-          <path d="M4.5 2L8.5 6L4.5 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none" />
-        </svg>
-      </button>
 
-      <div class="footer-stats">
-        <div class="stat-item">
-          <img src="/images/football-icon/full-corner.png" alt="角球" class="w-4 h-4" />
-          <span>{{ match.stats.homeCorner }}:{{ match.stats.awayCorner }}</span>
-        </div>
-        <div class="stat-item">
-          <img src="/images/football-icon/full-red.png" alt="紅牌" class="w-4 h-4" />
-          <span>{{ match.stats.homeRed }}:{{ match.stats.awayRed }}</span>
-        </div>
-        <div class="stat-item">
-          <img src="/images/football-icon/full-yellow.png" alt="黃牌" class="w-4 h-4" />
-          <span>{{ match.stats.homeYellow }}:{{ match.stats.awayYellow }}</span>
-        </div>
-        <div class="stat-item score-item">
-          <img src="/images/football-icon/full-score.png" alt="比分" class="w-4 h-4" />
-          <span class="font-bold">{{ match.stats.homeScore }}:{{ match.stats.awayScore }}</span>
+      <!-- Row 1: 更多玩法 (left) + 操作按鈕 (right) -->
+      <div class="footer-top-row">
+        <button class="more-markets-btn" @click="$emit('moreMarkets', match.matchId)">
+          更多玩法
+          <span class="more-markets-count">{{ match.extraMarketCount }}</span>
+          <svg class="chevron-icon" viewBox="0 0 12 12" fill="none">
+            <path d="M4.5 2L8.5 6L4.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
+
+        <div class="footer-actions">
+          <button v-if="match.hasVideo" class="action-btn" @click="$emit('openVideo', match.matchId)" aria-label="影片">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-4 h-4">
+              <polygon points="5 3 19 12 5 21 5 3" />
+            </svg>
+          </button>
+          <button v-if="match.hasAni" class="action-btn" @click="$emit('openAni', match.matchId)" aria-label="動畫">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-4 h-4">
+              <circle cx="12" cy="12" r="2" />
+              <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
+            </svg>
+          </button>
+          <button class="action-btn" @click="$emit('openStats', match.matchId)" aria-label="數據">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-4 h-4">
+              <path d="M18 20V10M12 20V4M6 20v-6" />
+            </svg>
+          </button>
         </div>
       </div>
 
-      <div class="footer-actions">
-        <button v-if="match.hasVideo" class="action-btn" @click="$emit('openVideo', match.matchId)" aria-label="影片">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-5 h-5">
-            <polygon points="5 3 19 12 5 21 5 3" />
-          </svg>
-        </button>
-        <button v-if="match.hasAni" class="action-btn" @click="$emit('openAni', match.matchId)" aria-label="動畫">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-5 h-5">
-            <circle cx="12" cy="12" r="2" /><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-          </svg>
-        </button>
-        <button class="action-btn" @click="$emit('openStats', match.matchId)" aria-label="數據">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-5 h-5">
-            <path d="M18 20V10M12 20V4M6 20v-6" />
-          </svg>
-        </button>
+      <!-- Row 2: 賽況統計 bar -->
+      <div class="footer-stats-row">
+        <div class="stat-chip">
+          <img src="/images/football-icon/full-corner.png" alt="角球" class="stat-icon" />
+          <span class="stat-label">角</span>
+          <span class="stat-score">{{ match.stats.homeCorner }}<em>:</em>{{ match.stats.awayCorner }}</span>
+        </div>
+
+        <div class="stat-divider" aria-hidden="true" />
+
+        <div class="stat-chip">
+          <img src="/images/football-icon/full-red.png" alt="紅牌" class="stat-icon" />
+          <span class="stat-label">紅</span>
+          <span class="stat-score">{{ match.stats.homeRed }}<em>:</em>{{ match.stats.awayRed }}</span>
+        </div>
+
+        <div class="stat-divider" aria-hidden="true" />
+
+        <div class="stat-chip">
+          <img src="/images/football-icon/full-yellow.png" alt="黃牌" class="stat-icon" />
+          <span class="stat-label">黃</span>
+          <span class="stat-score">{{ match.stats.homeYellow }}<em>:</em>{{ match.stats.awayYellow }}</span>
+        </div>
+
+        <div class="stat-divider stat-divider--accent" aria-hidden="true" />
+
+        <!-- Score chip: highlighted -->
+        <div class="stat-chip stat-chip--score">
+          <img src="/images/football-icon/full-score.png" alt="比分" class="stat-icon" />
+          <span class="stat-label">比分</span>
+          <span class="stat-score stat-score--score">{{ match.stats.homeScore }}<em>:</em>{{ match.stats.awayScore }}</span>
+        </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -268,14 +290,25 @@ defineEmits<{
 
 .match-card__footer {
   display: flex;
-  align-items: center;
-  padding: 6px 12px 8px;
+  flex-direction: column;
   border-top: 1px solid var(--color-surface-hover);
+}
+
+/* ── Row 1: 更多玩法 + action buttons ───────────────── */
+.footer-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
   gap: 8px;
 }
 
 .more-markets-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   font-size: 12px;
+  font-weight: 500;
   color: #60a5fa;
   background: none;
   border: none;
@@ -283,34 +316,32 @@ defineEmits<{
   padding: 0;
   white-space: nowrap;
   flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
 
-  &:active { opacity: 0.7; }
+  &:active { opacity: 0.65; }
 }
 
-.footer-stats {
-  display: flex;
+.more-markets-count {
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  flex: 1;
   justify-content: center;
-  overflow-x: auto;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar { display: none; }
+  min-width: 18px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  background-color: rgba(96, 165, 250, 0.15);
+  color: #93c5fd;
+  letter-spacing: 0;
 }
 
-.stat-item {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 11px;
-  color: var(--color-subtle);
-  white-space: nowrap;
+.chevron-icon {
+  width: 10px;
+  height: 10px;
   flex-shrink: 0;
-}
-
-.score-item {
-  color: var(--color-primary);
+  color: #60a5fa;
+  opacity: 0.7;
 }
 
 .footer-actions {
@@ -324,14 +355,15 @@ defineEmits<{
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 6px;
   border: 1px solid var(--color-surface-hover);
   background: var(--color-outcome-background);
   color: var(--color-subtle);
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
+  -webkit-tap-highlight-color: transparent;
 
   &:hover {
     background: var(--color-surface-hover);
@@ -339,5 +371,75 @@ defineEmits<{
   }
 
   &:active { opacity: 0.7; }
+}
+
+/* ── Row 2: stats bar ───────────────────────────────── */
+.footer-stats-row {
+  display: flex;
+  align-items: stretch;
+  border-top: 1px solid var(--color-surface-hover);
+  background-color: var(--color-surface-soft);
+}
+
+.stat-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex: 1;
+  padding: 5px 6px;
+  min-width: 0;
+}
+
+.stat-chip--score {
+  background-color: rgba(44, 217, 125, 0.06);
+  flex: 1.2;
+}
+
+.stat-icon {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.stat-label {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--color-subtle-light);
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+.stat-score {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-subtle);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+
+  em {
+    font-style: normal;
+    opacity: 0.45;
+    margin: 0 1px;
+  }
+}
+
+.stat-score--score {
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.stat-divider {
+  width: 1px;
+  align-self: stretch;
+  background-color: var(--color-surface-hover);
+  flex-shrink: 0;
+}
+
+.stat-divider--accent {
+  background-color: rgba(44, 217, 125, 0.18);
 }
 </style>
