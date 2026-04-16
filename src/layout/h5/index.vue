@@ -1,15 +1,16 @@
 <template>
   <div class="relative flex min-h-dvh flex-col bg-[var(--color-background-color)] dark:bg-[rgb(16,16,20)]">
-    <MobileLayoutHeader />
+    <div class="sticky top-0 z-10">
 
-    <main class="flex-1 overflow-y-auto pb-[calc(60px+env(safe-area-inset-bottom,0px))]">
-      <!-- 球類分類橫向滑動按鈕 -->
+      <MobileLayoutHeader />
       <SportsCategoryBar />
 
-      <!-- 時間分類選單 -->
       <TimeFilterBar :counts="tabCounts" />
+    </div>
 
-      <!-- 賽事列表 -->
+
+    <main class="flex-1 overflow-y-auto pb-[calc(60px+env(safe-area-inset-bottom,0px))]">
+
       <div class="match-list">
         <MatchEventCard
           v-for="match in demoMatches"
@@ -35,22 +36,20 @@ import TimeFilterBar from './TimeFilterBar.vue';
 import MatchEventCard, { type MatchEvent } from './MatchEventCard.vue';
 import { computed } from 'vue';
 
-const handleMoreMarkets = (id: string) => { /* TODO: navigate */ };
-const handleOpenVideo   = (id: string) => { /* TODO: open video */ };
-const handleOpenAni     = (id: string) => { /* TODO: open animation */ };
-const handleOpenStats   = (id: string) => { /* TODO: open stats */ };
+const handleMoreMarkets = (id: string) => { };
+const handleOpenVideo   = (id: string) => { };
+const handleOpenAni     = (id: string) => { };
+const handleOpenStats   = (id: string) => { };
 
-// Derive per-tab match counts from the match list.
-// Replace demoMatches with a reactive ref/store in production.
 const tabCounts = computed<Record<string, number>>(() => {
   const liveCount  = demoMatches.filter((m) => m.isLive).length;
   const todayCount = demoMatches.filter((m) => !m.isLive && m.time?.startsWith('今日')).length;
   const earlyCount = demoMatches.filter((m) => !m.isLive && !m.time?.startsWith('今日')).length;
   return {
-    hot:   demoMatches.length,   // 熱門 = all available matches
-    roll:  liveCount,            // 滾球 = live only
-    today: todayCount,           // 今日 = scheduled today
-    early: earlyCount,           // 早盤 = future / other days
+    hot:   demoMatches.length,
+    roll:  liveCount,
+    today: todayCount,
+    early: earlyCount,
   };
 });
 
@@ -172,5 +171,9 @@ const demoMatches: MatchEvent[] = [
   flex-direction: column;
   gap: 8px;
   padding: 10px 10px;
+}
+.hignt {
+  color: white;
+  padding: 20px;
 }
 </style>

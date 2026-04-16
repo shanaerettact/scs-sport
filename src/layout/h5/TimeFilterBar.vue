@@ -1,5 +1,4 @@
 <template>
-  <!-- 分類選單：熱門 / 滾球 / 今日 / 早盤 -->
   <div class="time-filter-bar">
     <button
       v-for="tab in tabs"
@@ -83,7 +82,6 @@ const tabs = [
 }
 
 .time-tab__label {
-  /* keeps label and badge on one line */
   white-space: nowrap;
 }
 
@@ -96,7 +94,6 @@ const tabs = [
   flex-shrink: 0;
 }
 
-/* Count badge */
 .time-tab__badge {
   display: inline-flex;
   align-items: center;
@@ -114,19 +111,16 @@ const tabs = [
   transition: background-color 0.2s, color 0.2s;
   flex-shrink: 0;
 
-  /* Live / 滾球 tab: red badge */
   &.is-live {
     background-color: rgba(239, 68, 68, 0.18);
     color: #f87171;
   }
 
-  /* When the tab itself is active, badge inherits brand colour */
   &.is-active-badge {
     background-color: rgba(44, 217, 125, 0.18);
     color: var(--color-primary);
   }
 
-  /* Live + active: keep red tint but slightly brighter */
   &.is-live.is-active-badge {
     background-color: rgba(239, 68, 68, 0.26);
     color: #fc8181;

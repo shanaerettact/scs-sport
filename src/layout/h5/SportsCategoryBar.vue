@@ -1,5 +1,4 @@
 <template>
-  <!-- 水平可滑動的球類分類按鈕區域 -->
   <div class="sports-category-bar">
     <div class="sports-scroll-wrapper">
       <button
@@ -11,12 +10,10 @@
         :aria-pressed="activeSport === sport.key"
         :aria-label="sport.label"
       >
-        <!-- Icon container with inner glow ring when active -->
         <span class="sport-btn__icon">
           <img :src="sport.icon" :alt="sport.label" class="sport-btn__img" />
         </span>
         <span class="sport-btn__label">{{ sport.label }}</span>
-        <!-- Active indicator dot -->
         <span class="sport-btn__dot" aria-hidden="true" />
       </button>
     </div>
@@ -40,14 +37,12 @@ const sports = [
 </script>
 
 <style scoped lang="scss">
-/* ── Container ─────────────────────────────────────────── */
 .sports-category-bar {
   background-color: var(--color-surface);
   border-bottom: 1px solid var(--color-surface-hover);
   padding: 6px 0 4px;
 }
 
-/* ── Scroll track ───────────────────────────────────────── */
 .sports-scroll-wrapper {
   display: flex;
   align-items: flex-start;
@@ -60,14 +55,12 @@ const sports = [
   &::-webkit-scrollbar { display: none; }
 }
 
-/* ── Button ─────────────────────────────────────────────── */
 .sport-btn {
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 3px;
-  /* Tighter padding: 5px vertical, 8px horizontal */
   padding: 5px 8px 6px;
   border: 1px solid transparent;
   border-radius: 10px;
@@ -86,7 +79,6 @@ const sports = [
     transform: scale(0.91);
   }
 
-  /* ── Icon wrapper ── */
   &__icon {
     position: relative;
     width: 30px;
@@ -103,17 +95,14 @@ const sports = [
       box-shadow 0.18s ease;
   }
 
-  /* ── Image ── */
   &__img {
     width: 18px;
     height: 18px;
     object-fit: contain;
-    /* Desaturate inactive icons for visual hierarchy */
     filter: grayscale(40%) opacity(0.75);
     transition: filter 0.18s ease;
   }
 
-  /* ── Label ── */
   &__label {
     font-size: 10px;
     font-weight: 500;
@@ -123,7 +112,6 @@ const sports = [
     transition: color 0.18s ease, font-weight 0.18s ease;
   }
 
-  /* ── Active indicator dot (hidden by default) ── */
   &__dot {
     width: 4px;
     height: 4px;
@@ -138,7 +126,6 @@ const sports = [
     translate: -50% 0;
   }
 
-  /* ── Hover state (non-active) ── */
   &:not(.is-active):hover {
     background-color: var(--color-surface-hover);
     border-color: var(--color-surface-hover);
@@ -152,7 +139,6 @@ const sports = [
     }
   }
 
-  /* ── Active state ── */
   &.is-active {
     background-color: rgba(44, 217, 125, 0.08);
     border-color: rgba(44, 217, 125, 0.22);

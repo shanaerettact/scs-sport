@@ -1,6 +1,5 @@
 <template>
   <div class="match-card">
-    <!-- 聯賽 header -->
     <div class="match-card__header">
       <div class="flex items-center gap-2 min-w-0">
         <img
@@ -19,7 +18,6 @@
       </div>
     </div>
 
-    <!-- 賠率標題列 -->
     <div class="match-card__odds-header">
       <div class="col-team" />
       <div class="col-odds text-center">獨贏</div>
@@ -27,7 +25,6 @@
       <div class="col-odds text-center">大/小</div>
     </div>
 
-    <!-- 主隊行 -->
     <div class="match-card__team-row">
       <div class="col-team flex items-center gap-2 min-w-0">
         <img
@@ -49,7 +46,6 @@
       </div>
     </div>
 
-    <!-- 客隊行 -->
     <div class="match-card__team-row">
       <div class="col-team flex items-center gap-2 min-w-0">
         <img
@@ -71,7 +67,6 @@
       </div>
     </div>
 
-    <!-- 和局行 (足球) -->
     <div v-if="match.hasDraw" class="match-card__draw-row">
       <div class="col-team flex items-center gap-2">
         <span class="draw-label">和局</span>
@@ -83,7 +78,6 @@
       <div class="col-odds"><OddsCell :locked="true" /></div>
     </div>
 
-    <!-- 底部：更多玩法 + 比分 + 操作 -->
     <div class="match-card__footer">
       <button class="more-markets-btn" @click="$emit('moreMarkets', match.matchId)">
         更多玩法 {{ match.extraMarketCount }}
@@ -92,7 +86,6 @@
         </svg>
       </button>
 
-      <!-- 賽況統計 -->
       <div class="footer-stats">
         <div class="stat-item">
           <img src="/images/football-icon/full-corner.png" alt="角球" class="w-4 h-4" />
@@ -112,7 +105,6 @@
         </div>
       </div>
 
-      <!-- 操作按鈕 -->
       <div class="footer-actions">
         <button v-if="match.hasVideo" class="action-btn" @click="$emit('openVideo', match.matchId)" aria-label="影片">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="w-5 h-5">
@@ -232,7 +224,6 @@ defineEmits<{
   letter-spacing: 0.05em;
 }
 
-/* Column layout shared across header / team rows */
 .match-card__odds-header,
 .match-card__team-row,
 .match-card__draw-row {
@@ -265,10 +256,6 @@ defineEmits<{
   min-width: 0;
 }
 
-.col-odds {
-  /* cells sized by OddsCell */
-}
-
 .team-name {
   font-size: 13px;
   font-weight: 600;
@@ -279,7 +266,6 @@ defineEmits<{
   color: var(--color-subtle);
 }
 
-/* Footer */
 .match-card__footer {
   display: flex;
   align-items: center;
