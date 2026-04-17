@@ -123,13 +123,8 @@ interface Market {
   outcomeList: Outcome[];
 }
 
-interface MatchInfo {
-  homeTeamName: string;
-  homeTeamLogo: string;
-  awayTeamName: string;
-  awayTeamLogo: string;
-  stats: { homeScore: number; awayScore: number };
-}
+// Re-use the canonical MatchEvent type so real data flows from the parent
+import { type MatchEvent as MatchInfo } from './MatchEventCard.vue';
 
 interface InsightTab {
   mode: string;
@@ -145,17 +140,9 @@ interface ViewButton {
 
 // ─── Props / Emits ───────────────────────────────────────────────────────────
 
-const props = withDefaults(defineProps<{
-  match?: MatchInfo;
-}>(), {
-  match: () => ({
-    homeTeamName: '主隊',
-    homeTeamLogo: '/images/sports/homeTeam.png',
-    awayTeamName: '客隊',
-    awayTeamLogo: '/images/sports/awayTeam.png',
-    stats: { homeScore: 0, awayScore: 0 },
-  }),
-});
+const props = defineProps<{
+  match: MatchInfo;
+}>();
 
 const emit = defineEmits<{
   (e: 'close'): void;
@@ -217,7 +204,7 @@ const insightTabs: InsightTab[] = [
   },
 ];
 
-// ─── Static: market / outcome data (更多玩法) ─────────────────────────────────
+// ─── Static: market / outcome data (更多玩法) ────────────────────��────────────
 // Replace this array with real API data as needed; the template remains unchanged.
 
 const staticMarkets: Market[] = [

@@ -9,19 +9,32 @@
     </div>
 
 
-    <main class="flex-1 overflow-y-auto pb-[calc(110px+env(safe-area-inset-bottom,0px))]">
+    <main class="relative flex-1 overflow-x-hidden overflow-y-auto pb-[calc(110px+env(safe-area-inset-bottom,0px))]">
 
-      <div class="match-list">
-        <MatchEventCard
-          v-for="match in demoMatches"
-          :key="match.matchId"
-          :match="match"
-          @more-markets="handleMoreMarkets"
-          @open-video="handleOpenVideo"
-          @open-ani="handleOpenAni"
-          @open-stats="handleOpenStats"
+      <Transition name="slide-side">
+        <!-- MatchSide panel: shown when a card's 更多玩法 is tapped -->
+        <MatchSide
+          v-if="showMatchSide && activeMatch"
+          :match="activeMatch"
+          @close="handleCloseSide"
+          @select-outcome="handleSelectOutcome"
+          class="match-side-panel"
         />
-      </div>
+
+        <!-- Default match list -->
+        <div v-else class="match-list">
+          <MatchEventCard
+            v-for="match in demoMatches"
+            :key="match.matchId"
+            :match="match"
+            @more-markets="handleMoreMarkets"
+            @open-video="handleOpenVideo"
+            @open-ani="handleOpenAni"
+            @open-stats="handleOpenStats"
+          />
+        </div>
+      </Transition>
+
     </main>
 
     <BottomNav />
@@ -34,9 +47,31 @@ import MobileLayoutHeader from './MobileLayoutHeader.vue';
 import SportsCategoryBar from './SportsCategoryBar.vue';
 import TimeFilterBar from './TimeFilterBar.vue';
 import MatchEventCard, { type MatchEvent } from './MatchEventCard.vue';
-import { computed } from 'vue';
+import MatchSide from './MatchSide.vue';
+import { computed, ref } from 'vue';
 
-const handleMoreMarkets = (id: string) => { };
+// ── MatchSide state ────────────────────────────────────────────────────────
+const showMatchSide = ref(false);
+const activeMatchId = ref<string | null>(null);
+
+const activeMatch = computed<MatchEvent | null>(
+  () => demoMatches.find((m) => m.matchId === activeMatchId.value) ?? null,
+);
+
+const handleMoreMarkets = (id: string) => {
+  activeMatchId.value = id;
+  showMatchSide.value = true;
+};
+
+const handleCloseSide = () => {
+  showMatchSide.value = false;
+  activeMatchId.value = null;
+};
+
+const handleSelectOutcome = (_market: unknown, _outcome: unknown) => {
+  // TODO: add bet-slip integration
+};
+
 const handleOpenVideo   = (id: string) => { };
 const handleOpenAni     = (id: string) => { };
 const handleOpenStats   = (id: string) => { };
@@ -172,8 +207,26 @@ const demoMatches: MatchEvent[] = [
   gap: 8px;
   padding: 10px 10px;
 }
-.hignt {
-  color: white;
-  padding: 20px;
+
+.match-side-panel {
+  padding: 12px 10px;
+}
+
+/* Slide transition: new panel slides in from the right, list slides out to the left */
+.slide-side-enter-active,
+.slide-side-leave-active {
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+  position: absolute;
+  width: 100%;
+}
+
+.slide-side-enter-from {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.slide-side-leave-to {
+  transform: translateX(-30%);
+  opacity: 0;
 }
 </style>
