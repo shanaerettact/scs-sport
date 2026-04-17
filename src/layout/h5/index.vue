@@ -9,7 +9,7 @@
     </div>
 
 
-    <main class="flex-1 overflow-y-auto pb-[calc(60px+env(safe-area-inset-bottom,0px))]">
+    <main class="flex-1 overflow-y-auto pb-[calc(110px+env(safe-area-inset-bottom,0px))]">
 
       <div class="match-list">
         <MatchEventCard
