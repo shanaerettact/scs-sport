@@ -27,27 +27,6 @@
       </div>
     </div>
 
-    <!-- Scoreboard area (always rendered, hidden via CSS when not in score view) -->
-    <div class="scoreboard-area">
-      <div class="score-panel" :class="{ 'is-visible': currentView === 'score' }">
-        <slot name="scoreboard">
-          <div class="score-placeholder">
-            <div class="team-row">
-              <img :src="match.homeTeamLogo" :alt="match.homeTeamName" class="team-logo" @error="onImgError" />
-              <span class="team-name">{{ match.homeTeamName }}</span>
-              <span class="score-val">{{ match.stats.homeScore }}</span>
-            </div>
-            <div class="score-sep">:</div>
-            <div class="team-row">
-              <img :src="match.awayTeamLogo" :alt="match.awayTeamName" class="team-logo" @error="onImgError" />
-              <span class="team-name">{{ match.awayTeamName }}</span>
-              <span class="score-val">{{ match.stats.awayScore }}</span>
-            </div>
-          </div>
-        </slot>
-      </div>
-    </div>
-
     <!-- Insight tab bar -->
     <div class="flex justify-end gap-2 mb-3">
       <button
@@ -305,10 +284,6 @@ const onClose = () => emit('close');
 const onSelectOutcome = (market: Market, outcome: Outcome) => {
   emit('selectOutcome', market, outcome);
 };
-
-const onImgError = (e: Event) => {
-  (e.target as HTMLImageElement).src = '/images/sports/homeTeam.png';
-};
 </script>
 
 <style scoped lang="scss">
@@ -346,71 +321,6 @@ const onImgError = (e: Event) => {
   width: 16px;
   height: 16px;
   pointer-events: none;
-}
-
-/* ── Scoreboard area ─────────────────────────────────────── */
-.scoreboard-area {
-  overflow: hidden;
-  transition: max-height 0.25s ease, opacity 0.2s ease, margin-bottom 0.25s ease;
-}
-
-.score-panel {
-  max-height: 0;
-  opacity: 0;
-  margin-bottom: 0;
-  overflow: hidden;
-  transition: max-height 0.25s ease, opacity 0.2s ease, margin-bottom 0.2s ease;
-
-  &.is-visible {
-    max-height: 200px;
-    opacity: 1;
-    margin-bottom: 12px;
-  }
-}
-
-.score-placeholder {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  padding: 12px;
-  border-radius: 8px;
-  background: var(--color-surface);
-}
-
-.team-row {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  flex: 1;
-}
-
-.team-logo {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  object-fit: contain;
-}
-
-.team-name {
-  font-size: 12px;
-  color: var(--color-subtle);
-  text-align: center;
-}
-
-.score-val {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--color-primary);
-}
-
-.score-sep {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--color-subtle-light);
-  align-self: center;
-  margin-top: 24px;
 }
 
 /* ── Market list ─────────────────────────────────────────── */
