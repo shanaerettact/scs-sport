@@ -23,6 +23,59 @@
       </div>
     </div>
 
+    <!-- ── Match info strip ───────────────────────────────── -->
+    <div class="match-info">
+
+      <!-- League row -->
+      <div class="info-league">
+        <img
+          :src="match.leagueLogo"
+          :alt="match.leagueName"
+          class="league-logo"
+          @error="($event.target as HTMLImageElement).src = '/images/sports/league.png'"
+        />
+        <span class="league-name">{{ match.leagueName }}</span>
+        <span v-if="match.isLive" class="live-badge">LIVE</span>
+        <span class="match-time">
+          <template v-if="match.isLive">{{ match.period }}&nbsp;{{ match.clock }}</template>
+          <template v-else>{{ match.time }}</template>
+        </span>
+      </div>
+
+      <!-- Teams + score row -->
+      <div class="info-teams">
+        <!-- Home team -->
+        <div class="team-block">
+          <img
+            :src="match.homeTeamLogo"
+            :alt="match.homeTeamName"
+            class="team-crest"
+            @error="($event.target as HTMLImageElement).src = '/images/sports/homeTeam.png'"
+          />
+          <span class="team-label">{{ match.homeTeamName }}</span>
+        </div>
+
+        <!-- Score -->
+        <div class="score-badge" :class="{ 'is-live': match.isLive }">
+          <span class="score-num">{{ match.stats.homeScore }}</span>
+          <span class="score-colon">:</span>
+          <span class="score-num">{{ match.stats.awayScore }}</span>
+        </div>
+
+        <!-- Away team -->
+        <div class="team-block team-block--away">
+          <img
+            :src="match.awayTeamLogo"
+            :alt="match.awayTeamName"
+            class="team-crest"
+            @error="($event.target as HTMLImageElement).src = '/images/sports/awayTeam.png'"
+          />
+          <span class="team-label">{{ match.awayTeamName }}</span>
+        </div>
+      </div>
+
+    </div>
+
     <!-- ── Insight tab strip ───────────────────────────────── -->
     <div class="insight-strip">
       <button
@@ -254,6 +307,142 @@ const onSelectOutcome = (market: Market, outcome: Outcome) => {
   background: var(--color-surface-soft, #111318);
   border-radius: 12px;
   overflow: hidden;
+}
+
+/* ── Match info strip ────────────────────────────────────── */
+.match-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 14px 12px;
+  background: linear-gradient(
+    160deg,
+    var(--color-surface-soft, #14171e) 0%,
+    rgba(22, 119, 255, 0.06) 100%
+  );
+  border-bottom: 1px solid var(--color-border-subtle, rgba(255,255,255,0.06));
+}
+
+/* League row */
+.info-league {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.league-logo {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+.league-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-subtle, #8b929e);
+  letter-spacing: 0.02em;
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.live-badge {
+  flex-shrink: 0;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #fff;
+  background: #ef4444;
+  padding: 1px 5px;
+  border-radius: 3px;
+  line-height: 1.5;
+}
+
+.match-time {
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-primary, #1677ff);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Teams row */
+.info-teams {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+.team-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+
+  &--away {
+    align-items: flex-end;
+  }
+}
+
+.team-crest {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: contain;
+  background: var(--color-btn-bg, rgba(255,255,255,0.05));
+  padding: 2px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.35);
+}
+
+.team-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--color-main, #e4e8f0);
+  letter-spacing: 0.01em;
+  max-width: 90px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  line-height: 1.3;
+}
+
+/* Score badge */
+.score-badge {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--color-btn-bg, rgba(255,255,255,0.05));
+  border: 1px solid var(--color-border-subtle, rgba(255,255,255,0.08));
+  border-radius: 8px;
+  padding: 5px 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+
+  &.is-live {
+    border-color: rgba(22, 119, 255, 0.3);
+    box-shadow: 0 0 0 1px rgba(22,119,255,0.12), 0 2px 10px rgba(22,119,255,0.1);
+  }
+}
+
+.score-num {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--color-main, #e4e8f0);
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.score-colon {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-subtle, #8b929e);
+  line-height: 1;
+  margin: 0 1px;
 }
 
 /* ── Toolbar ─────────────────────────────────────────────── */
