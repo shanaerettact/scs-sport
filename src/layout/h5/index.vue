@@ -3,13 +3,21 @@
     <div class="sticky top-0 z-10">
 
       <MobileLayoutHeader />
-      <SportsCategoryBar />
+      <SportsCategoryBar
+      v-if="!showMatchSide"
+      />
 
-      <TimeFilterBar :counts="tabCounts" />
+      <TimeFilterBar
+      v-if="!showMatchSide"
+      :counts="tabCounts"
+      />
     </div>
 
 
-    <main class="relative flex-1 overflow-x-hidden overflow-y-auto pb-[calc(110px+env(safe-area-inset-bottom,0px))]">
+    <main
+      class="relative flex-1 overflow-x-hidden pb-[calc(110px+env(safe-area-inset-bottom,0px))]"
+      :class="showMatchSide ? 'overflow-y-hidden' : 'overflow-y-auto'"
+    >
 
       <Transition name="slide-side">
         <!-- MatchSide panel: shown when a card's 更多玩法 is tapped -->
@@ -209,7 +217,7 @@ const demoMatches: MatchEvent[] = [
 }
 
 .match-side-panel {
-  padding: 12px 10px;
+  padding: 0px 10px 12px 10px;
 }
 
 /* Slide transition: new panel slides in from the right, list slides out to the left */
