@@ -1,37 +1,37 @@
 <template>
-  <div class="bg-[var(--color-surface)] border-b border-[var(--color-border-subtle)]">
+  <div class="sport-category-bar">
+    <!-- Scrollable pill row -->
     <div
-      class="flex items-center gap-1 overflow-x-auto px-3 py-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      ref="scrollEl"
+      class="sport-category-scroll"
+      role="tablist"
+      aria-label="運動分類"
     >
       <button
         v-for="sport in sports"
         :key="sport.key"
-        class="group relative flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12px] font-semibold transition-all duration-200 outline-none [-webkit-tap-highlight-color:transparent] active:scale-[0.93]"
-        :class="activeSport === sport.key
-          ? 'border-[var(--color-primary-border)] bg-[var(--color-primary-tint)] text-[var(--color-primary)] shadow-[0_0_0_1px_var(--color-primary-border),0_2px_8px_var(--color-primary-glow)]'
-          : 'border-transparent text-[var(--color-subtle)] hover:border-[var(--color-border-subtle)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-main)]'"
-        :aria-pressed="activeSport === sport.key"
+        role="tab"
+        :aria-selected="activeSport === sport.key"
         :aria-label="sport.label"
-        @click="activeSport = sport.key"
+        class="sport-pill"
+        :class="{ 'sport-pill--active': activeSport === sport.key }"
+        @click="select(sport.key)"
       >
-        <img
-          :src="sport.icon"
-          :alt="sport.label"
-          class="h-[16px] w-[16px] shrink-0 object-contain transition-all duration-200"
-          :class="activeSport === sport.key
-            ? 'opacity-100 drop-shadow-[0_0_4px_var(--color-primary-glow)]'
-            : 'opacity-55 grayscale group-hover:opacity-80 group-hover:grayscale-[40%]'"
-        />
-        <span class="whitespace-nowrap leading-none">{{ sport.label }}</span>
-
-        <!-- Active dot indicator -->
-        <span
-          class="absolute -bottom-[9px] left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-[var(--color-primary)] transition-all duration-200"
-          :class="activeSport === sport.key ? 'opacity-100 scale-100' : 'opacity-0 scale-0'"
-          aria-hidden="true"
-        />
+        <!-- Icon wrapper with layered background -->
+        <span class="sport-pill__icon-wrap">
+          <img
+            :src="sport.icon"
+            :alt="sport.label"
+            class="sport-pill__icon"
+            :class="{ 'sport-pill__icon--active': activeSport === sport.key }"
+          />
+        </span>
+        <span class="sport-pill__label">{{ sport.label }}</span>
       </button>
     </div>
+
+    <!-- Subtle bottom rule -->
+    <div class="sport-category-bar__rule" aria-hidden="true" />
   </div>
 </template>
 
@@ -39,6 +39,11 @@
 import { ref } from 'vue';
 
 const activeSport = ref('soccer');
+const scrollEl = ref<HTMLElement | null>(null);
+
+function select(key: string) {
+  activeSport.value = key;
+}
 
 const sports = [
   { key: 'soccer',      label: '足球',   icon: '/images/sports/soccer.png' },
@@ -50,3 +55,136 @@ const sports = [
   { key: 'badminton',   label: '羽毛球', icon: '/images/sports/badminton.png' },
 ];
 </script>
+
+<style scoped>
+/* ─── Container ───────────────────────────────────────────── */
+.sport-category-bar {
+  background: linear-gradient(
+    135deg,
+    var(--color-sport-bar-bg-from) 0%,
+    var(--color-sport-bar-bg-to) 100%
+  );
+  position: relative;
+}
+
+/* ─── Scroll track ────────────────────────────────────────── */
+.sport-category-scroll {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 10px 12px 10px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.sport-category-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Pill base ────────────────────────────────────────────── */
+.sport-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 6px 13px 6px 8px;
+  border: 1px solid var(--color-sport-pill-inactive-border);
+  background: var(--color-sport-pill-inactive-bg);
+  color: var(--color-sport-pill-inactive-text);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+  /* Subtle glass sheen on inactive pills */
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.sport-pill:hover:not(.sport-pill--active) {
+  background: rgba(79, 142, 247, 0.08);
+  border-color: rgba(79, 142, 247, 0.22);
+  color: var(--color-primary);
+}
+
+.sport-pill:active {
+  transform: scale(0.94);
+}
+
+/* ─── Active pill ──────────────────────────────────────────── */
+.sport-pill--active {
+  background: linear-gradient(
+    135deg,
+    var(--color-sport-pill-active-from) 0%,
+    var(--color-sport-pill-active-to) 100%
+  );
+  border-color: transparent;
+  color: var(--color-sport-pill-active-text);
+  box-shadow: var(--color-sport-pill-active-shadow);
+  transform: translateY(-1px);
+}
+
+/* ─── Icon wrapper ─────────────────────────────────────────── */
+.sport-pill__icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+
+.sport-pill--active .sport-pill__icon-wrap {
+  background: rgba(255, 255, 255, 0.26);
+}
+
+/* ─── Icon image ───────────────────────────────────────────── */
+.sport-pill__icon {
+  width: 14px;
+  height: 14px;
+  object-fit: contain;
+  transition: opacity 0.2s ease, filter 0.2s ease;
+  opacity: 0.5;
+  filter: grayscale(60%);
+}
+
+.sport-pill--active .sport-pill__icon,
+.sport-pill:hover .sport-pill__icon {
+  opacity: 1;
+  filter: none;
+}
+
+.sport-pill--active .sport-pill__icon {
+  filter: brightness(0) invert(1);
+}
+
+/* ─── Label ────────────────────────────────────────────────── */
+.sport-pill__label {
+  transition: color 0.2s ease;
+}
+
+/* ─── Bottom rule ──────────────────────────────────────────── */
+.sport-category-bar__rule {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-sport-bar-separator) 20%,
+    var(--color-sport-bar-separator) 80%,
+    transparent 100%
+  );
+}
+</style>

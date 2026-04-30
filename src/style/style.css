@@ -83,6 +83,18 @@
   --color-link: #2563eb;
   --color-link-soft: rgba(37, 99, 235, 0.13);
 
+  /* Sports Category Bar */
+  --color-sport-bar-bg-from: #f0f5ff;
+  --color-sport-bar-bg-to: #e8f3ff;
+  --color-sport-pill-inactive-bg: rgba(255, 255, 255, 0.72);
+  --color-sport-pill-inactive-border: rgba(79, 142, 247, 0.14);
+  --color-sport-pill-inactive-text: #64748b;
+  --color-sport-pill-active-from: #4f8ef7;
+  --color-sport-pill-active-to: #2563eb;
+  --color-sport-pill-active-text: #ffffff;
+  --color-sport-pill-active-shadow: 0 4px 14px rgba(79, 142, 247, 0.38), 0 1px 3px rgba(37, 99, 235, 0.22);
+  --color-sport-bar-separator: rgba(79, 142, 247, 0.1);
+
   --color-bet-slip-accent: #558afd;
   --color-bet-slip-accent-mid: #7c9ff9;
   --color-bet-slip-accent-soft: #4071d9;
@@ -171,6 +183,18 @@
   --color-live-bg: rgba(248, 113, 113, 0.12);
   --color-link: #7dd3b0;
   --color-link-soft: rgba(125, 211, 176, 0.18);
+
+  /* Sports Category Bar */
+  --color-sport-bar-bg-from: #111724;
+  --color-sport-bar-bg-to: #141d2b;
+  --color-sport-pill-inactive-bg: rgba(255, 255, 255, 0.04);
+  --color-sport-pill-inactive-border: rgba(86, 217, 168, 0.12);
+  --color-sport-pill-inactive-text: #8892a4;
+  --color-sport-pill-active-from: #33c98e;
+  --color-sport-pill-active-to: #1aa874;
+  --color-sport-pill-active-text: #031a10;
+  --color-sport-pill-active-shadow: 0 4px 14px rgba(86, 217, 168, 0.32), 0 1px 3px rgba(26, 168, 116, 0.2);
+  --color-sport-bar-separator: rgba(86, 217, 168, 0.08);
 
   --color-bet-slip-accent: #0fa372;
   --color-bet-slip-accent-mid: #72d9b5;
