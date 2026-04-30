@@ -5,17 +5,11 @@
         <MobileLayoutHeader />
       </div>
 
-      <div
-        v-if="!showMatchSide"
-        class="bg-[color-mix(in_srgb,var(--color-surface)_68%,var(--color-surface-hover)_32%)] dark:bg-[var(--color-surface)]"
-      >
+      <div v-if="!showMatchSide">
         <SportsCategoryBar />
       </div>
 
-      <div
-        v-if="!showMatchSide && !showMatchResult"
-        class="bg-[color-mix(in_srgb,var(--color-header-bg)_90%,var(--color-primary)_10%)] dark:bg-[var(--color-surface-soft)]"
-      >
+      <div v-if="!showMatchSide && !showMatchResult">
         <TimeFilterBar :counts="tabCounts" />
       </div>
     </div>
@@ -55,7 +49,7 @@
             key="betRecodHistory"
           />
 
-          <div v-else key="list" class="flex flex-col gap-2 px-2.5 py-2.5">
+          <div v-else key="list" class="flex flex-col gap-3 px-3 py-3">
             <MatchEventCard
               v-for="match in demoMatches"
               :key="match.matchId"

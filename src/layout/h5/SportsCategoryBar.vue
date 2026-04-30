@@ -1,31 +1,33 @@
 <template>
-  <div class="border-b border-[var(--color-surface-hover)] bg-transparent py-1.5 pb-1">
+  <div class="bg-[var(--color-surface)] border-b border-[var(--color-border-subtle)]">
     <div
-      class="flex items-start gap-0.5 overflow-x-auto px-2.5 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      class="flex items-center gap-1 overflow-x-auto px-3 py-2 [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
     >
       <button
         v-for="sport in sports"
         :key="sport.key"
-        class="group relative flex shrink-0 cursor-pointer flex-col items-center gap-0.5 rounded-[10px] border border-transparent bg-transparent p-1.5 px-2 pb-1.5 pt-1.5 transition-[background-color,border-color,transform,box-shadow,filter] duration-[180ms] ease-in-out outline-none [-webkit-tap-highlight-color:transparent] active:scale-[0.91] hover:border-[var(--color-surface-hover)] hover:bg-[var(--color-surface-hover)] data-[on=true]:border-[var(--color-primary-border)] data-[on=true]:bg-[var(--color-primary-tint)] data-[on=true]:shadow-[0_1px_6px_var(--color-primary-glow)]"
-        :data-on="activeSport === sport.key"
-        @click="activeSport = sport.key"
+        class="group relative flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12px] font-semibold transition-all duration-200 outline-none [-webkit-tap-highlight-color:transparent] active:scale-[0.93]"
+        :class="activeSport === sport.key
+          ? 'border-[var(--color-primary-border)] bg-[var(--color-primary-tint)] text-[var(--color-primary)] shadow-[0_0_0_1px_var(--color-primary-border),0_2px_8px_var(--color-primary-glow)]'
+          : 'border-transparent text-[var(--color-subtle)] hover:border-[var(--color-border-subtle)] hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-main)]'"
         :aria-pressed="activeSport === sport.key"
         :aria-label="sport.label"
+        @click="activeSport = sport.key"
       >
+        <img
+          :src="sport.icon"
+          :alt="sport.label"
+          class="h-[16px] w-[16px] shrink-0 object-contain transition-all duration-200"
+          :class="activeSport === sport.key
+            ? 'opacity-100 drop-shadow-[0_0_4px_var(--color-primary-glow)]'
+            : 'opacity-55 grayscale group-hover:opacity-80 group-hover:grayscale-[40%]'"
+        />
+        <span class="whitespace-nowrap leading-none">{{ sport.label }}</span>
+
+        <!-- Active dot indicator -->
         <span
-          class="relative flex h-[30px] w-[30px] items-center justify-center rounded-lg border border-transparent bg-transparent transition-[background-color,border-color,box-shadow] dark:bg-[var(--color-surface-soft)] group-data-[on=true]:border-[var(--color-primary-border)] group-data-[on=true]:bg-[var(--color-primary-tint)] dark:group-data-[on=true]:bg-[var(--color-primary-tint)] group-data-[on=true]:group-hover:border-[var(--color-primary-border)] group-data-[on=true]:group-hover:bg-[var(--color-primary-tint)] group-hover:border-[var(--color-surface-hover)] group-hover:bg-[var(--color-surface-hover)]"
-        >
-          <img
-            :src="sport.icon"
-            :alt="sport.label"
-            class="h-[18px] w-[18px] object-contain opacity-75 grayscale transition-[filter,opacity] duration-[180ms] group-hover:opacity-90 group-hover:grayscale-[15%] group-data-[on=true]:opacity-100 group-data-[on=true]:grayscale-0 group-data-[on=true]:drop-shadow-[0_0_4px_var(--color-primary-glow)]"
-          />
-        </span>
-        <span
-          class="text-[10px] font-medium tracking-wide whitespace-nowrap text-[var(--color-subtle)] transition-[color,font-weight] group-data-[on=true]:font-bold group-data-[on=true]:text-[var(--color-primary)]"
-        >{{ sport.label }}</span>
-        <span
-          class="absolute bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 scale-0 rounded-full bg-[var(--color-primary)] opacity-0 transition-[opacity,transform] group-data-[on=true]:scale-100 group-data-[on=true]:opacity-100"
+          class="absolute -bottom-[9px] left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-[var(--color-primary)] transition-all duration-200"
+          :class="activeSport === sport.key ? 'opacity-100 scale-100' : 'opacity-0 scale-0'"
           aria-hidden="true"
         />
       </button>

@@ -30,42 +30,58 @@
 }
 
 :root {
-  --color-primary: #558afd;
-  --color-on-primary: #f8fafc;
+  /* Brand */
+  --color-primary: #4f8ef7;
+  --color-primary-vivid: #2f6ff5;
+  --color-on-primary: #ffffff;
   --color-primary-contrast: var(--color-on-primary);
-  --color-primary-tint: rgba(37, 99, 235, 0.1);
-  --color-primary-soft: rgba(37, 99, 235, 0.18);
-  --color-primary-border: rgba(37, 99, 235, 0.3);
-  --color-primary-glow: rgba(37, 99, 235, 0.22);
-  --color-background-color: #e8e8e8;
-  --color-surface: #fafcff;
-  --color-surface-hover: #e0e0e0;
-  --color-surface-soft: #fcfeff;
-  --color-bet-panel: #fff;
-  --color-main: #1e293b;
-  --color-subtle: #4b5563;
-  --color-subtle-light: #9ca3af;
-  --color-border-subtle: rgba(15, 23, 42, 0.1);
+  --color-primary-tint: rgba(79, 142, 247, 0.1);
+  --color-primary-soft: rgba(79, 142, 247, 0.18);
+  --color-primary-border: rgba(79, 142, 247, 0.32);
+  --color-primary-glow: rgba(79, 142, 247, 0.26);
+
+  /* Backgrounds */
+  --color-background-color: #f0f2f6;
+  --color-surface: #ffffff;
+  --color-surface-hover: #e5e9f2;
+  --color-surface-soft: #f7f9fd;
+  --color-bet-panel: #ffffff;
   --color-card-bg: #ffffff;
+  --color-card-border: rgba(15, 23, 42, 0.08);
+
+  /* Text */
+  --color-main: #0f172a;
+  --color-subtle: #475569;
+  --color-subtle-light: #94a3b8;
+
+  /* Borders & Interactions */
+  --color-border-subtle: rgba(15, 23, 42, 0.09);
   --color-btn-bg: rgba(15, 23, 42, 0.05);
   --color-btn-bg-hover: rgba(15, 23, 42, 0.1);
-  --color-outcome-background: #f6f5f6;
-  --color-outcome-bg: #eef1f3;
-  --color-side-outcome-background: #eef1f3;
+
+  /* Odds / Outcome */
+  --color-outcome-background: #f1f4fb;
+  --color-outcome-bg: #eaeff8;
+  --color-side-outcome-background: #eaeff8;
+
+  /* Header */
   --color-header-bg: #ffffff;
-  --color-header-border: rgba(15, 23, 42, 0.12);
+  --color-header-border: rgba(15, 23, 42, 0.1);
   --color-header-muted: #64748b;
-  --color-header-action-bg: rgba(15, 23, 42, 0.06);
-  --color-header-divider: rgba(15, 23, 42, 0.12);
-  --color-header-icon-muted: rgba(15, 23, 42, 0.45);
-  --color-balance: #f5c842;
-  --color-bottom-nav-bg: rgba(240, 244, 245, 0.85);
-  --color-bottom-nav-border: rgba(0, 0, 0, 0.06);
-  --color-bottom-nav-shadow: 0 -1px 0 0 rgba(37, 99, 235, 0.2), 0 -8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-  --color-sticky-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.12);
+  --color-header-action-bg: rgba(15, 23, 42, 0.05);
+  --color-header-divider: rgba(15, 23, 42, 0.1);
+  --color-header-icon-muted: rgba(15, 23, 42, 0.4);
+
+  /* Accent & Utility */
+  --color-balance: #f59e0b;
+  --color-bottom-nav-bg: rgba(255, 255, 255, 0.88);
+  --color-bottom-nav-border: rgba(15, 23, 42, 0.07);
+  --color-bottom-nav-shadow: 0 -1px 0 0 rgba(79, 142, 247, 0.18), 0 -8px 32px rgba(0, 0, 0, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  --color-sticky-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.1);
   --color-live: #ef4444;
-  --color-link: #1d4ed8;
-  --color-link-soft: rgba(37, 99, 235, 0.15);
+  --color-live-bg: rgba(239, 68, 68, 0.1);
+  --color-link: #2563eb;
+  --color-link-soft: rgba(37, 99, 235, 0.13);
 
   --color-bet-slip-accent: #558afd;
   --color-bet-slip-accent-mid: #7c9ff9;
@@ -103,42 +119,58 @@
 }
 
 .dark {
-  --color-primary: #63e2b7;
-  --color-on-primary: #0c1f18;
+  /* Brand */
+  --color-primary: #56d9a8;
+  --color-primary-vivid: #33c98e;
+  --color-on-primary: #052116;
   --color-primary-contrast: var(--color-on-primary);
-  --color-primary-tint: rgba(99, 226, 183, 0.18);
-  --color-primary-soft: rgba(99, 226, 183, 0.32);
-  --color-primary-border: rgba(99, 226, 183, 0.5);
-  --color-primary-glow: rgba(99, 226, 183, 0.45);
-  --color-background-color: #101014;
-  --color-surface: #3a4142;
-  --color-surface-hover: #4a5152;
-  --color-surface-soft: #292d2e;
-  --color-bet-panel: #232626;
-  --color-main: #f1f5f9;
-  --color-subtle: #9ca3af;
-  --color-subtle-light: #d1d5db;
-  --color-border-subtle: rgba(255, 255, 255, 0.08);
-  --color-card-bg: rgba(255, 255, 255, 0.04);
+  --color-primary-tint: rgba(86, 217, 168, 0.14);
+  --color-primary-soft: rgba(86, 217, 168, 0.26);
+  --color-primary-border: rgba(86, 217, 168, 0.42);
+  --color-primary-glow: rgba(86, 217, 168, 0.38);
+
+  /* Backgrounds */
+  --color-background-color: #0b0e13;
+  --color-surface: #161b24;
+  --color-surface-hover: #1e2535;
+  --color-surface-soft: #111520;
+  --color-bet-panel: #1a1f2e;
+  --color-card-bg: rgba(255, 255, 255, 0.03);
+  --color-card-border: rgba(255, 255, 255, 0.07);
+
+  /* Text */
+  --color-main: #e8edf5;
+  --color-subtle: #8892a4;
+  --color-subtle-light: #c2ccdb;
+
+  /* Borders & Interactions */
+  --color-border-subtle: rgba(255, 255, 255, 0.07);
   --color-btn-bg: rgba(255, 255, 255, 0.05);
   --color-btn-bg-hover: rgba(255, 255, 255, 0.09);
-  --color-outcome-background: #292d2e;
+
+  /* Odds / Outcome */
+  --color-outcome-background: #1a1f2e;
   --color-outcome-bg: rgba(255, 255, 255, 0.04);
-  --color-side-outcome-background: #202324;
-  --color-header-bg: #0f1213;
-  --color-header-border: rgba(255, 255, 255, 0.08);
-  --color-header-muted: rgba(255, 255, 255, 0.6);
+  --color-side-outcome-background: #141824;
+
+  /* Header */
+  --color-header-bg: #0d1018;
+  --color-header-border: rgba(255, 255, 255, 0.07);
+  --color-header-muted: rgba(200, 212, 232, 0.7);
   --color-header-action-bg: rgba(255, 255, 255, 0.05);
-  --color-header-divider: rgba(255, 255, 255, 0.1);
-  --color-header-icon-muted: rgba(255, 255, 255, 0.5);
-  --color-balance: #f5c842;
-  --color-bottom-nav-bg: rgba(15, 18, 19, 0.82);
-  --color-bottom-nav-border: rgba(255, 255, 255, 0.07);
-  --color-bottom-nav-shadow: 0 -1px 0 0 rgba(99, 226, 183, 0.42), 0 -8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  --color-sticky-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.45);
+  --color-header-divider: rgba(255, 255, 255, 0.08);
+  --color-header-icon-muted: rgba(255, 255, 255, 0.42);
+
+  /* Accent & Utility */
+  --color-balance: #fbbf24;
+  --color-bottom-nav-bg: rgba(11, 14, 19, 0.86);
+  --color-bottom-nav-border: rgba(255, 255, 255, 0.06);
+  --color-bottom-nav-shadow: 0 -1px 0 0 rgba(86, 217, 168, 0.35), 0 -8px 32px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --color-sticky-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.5);
   --color-live: #f87171;
-  --color-link: #86efac;
-  --color-link-soft: rgba(134, 239, 172, 0.22);
+  --color-live-bg: rgba(248, 113, 113, 0.12);
+  --color-link: #7dd3b0;
+  --color-link-soft: rgba(125, 211, 176, 0.18);
 
   --color-bet-slip-accent: #0fa372;
   --color-bet-slip-accent-mid: #72d9b5;
