@@ -1,0 +1,39 @@
+{
+  "name": "scs-client-web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "start": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vueuse/core": "^13.9.0",
+    "axios": "^1.9.0",
+    "dayjs": "^1.11.13",
+    "js-md5": "^0.8.3",
+    "jwt-decode": "^4.0.0",
+    "pinia": "^3.0.2",
+    "vue": "^3.5.13",
+    "vue-i18n": "^11.1.3",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.7",
+    "@types/node": "^22.15.19",
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vue/tsconfig": "^0.7.0",
+    "autoprefixer": "^10.4.21",
+    "naive-ui": "^2.41.0",
+    "sass": "^1.89.0",
+    "tailwindcss": "^4.1.7",
+    "typescript": "~5.8.3",
+    "vfonts": "^0.0.3",
+    "vite": "^6.3.5",
+    "vite-plugin-svg-loader": "^1.0.0",
+    "vite-svg-loader": "^5.1.0",
+    "vue-tsc": "^2.2.8"
+  }
+}

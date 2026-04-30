@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    keel.sh/policy: regexp:^dev$
+    keel.sh/pollSchedule: '@every 1m'
+    keel.sh/trigger: poll
+  name: scs-client-web
+  labels:
+    workload.user.cattle.io/workloadselector: apps.deployment-scs-client-web
+  namespace: scs-dev
+spec:
+  selector:
+    matchLabels:
+      workload.user.cattle.io/workloadselector: apps.deployment-scs-client-web
+  template:
+    metadata:
+      labels:
+        workload.user.cattle.io/workloadselector: apps.deployment-scs-client-web
+        app: scs-client-web
+      namespace: scs-dev
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - scs-client-web
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+      containers:
+        - image: harbor.over9000.link/tgp/scs-client-web:dev
+          imagePullPolicy: Always
+          name: scs-client-web
+          resources: {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+        - name: harbor-over9000-link
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+#      volumes:
+  progressDeadlineSeconds: 600
+  #replicas: 1
+  revisionHistoryLimit: 10
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: scs-client-web-srv
+  namespace: scs-dev
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+    - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 80
+    - name: https
+      port: 443
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: scs-client-web
+  sessionAffinity: None
+  type: ClusterIP
+

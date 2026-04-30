@@ -1,0 +1,766 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@keyframes bn-home-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes bet-slip-add-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+    box-shadow:
+      0 1px 5px color-mix(in srgb, var(--color-primary) 10%, transparent),
+      0 0 0 0 color-mix(in srgb, var(--color-primary) 0%, transparent);
+  }
+  50% {
+    transform: scale(1.06);
+    filter: brightness(1.045);
+    box-shadow:
+      0 2px 10px color-mix(in srgb, var(--color-primary) 15%, transparent),
+      0 0 7px color-mix(in srgb, var(--color-primary) 9%, transparent);
+  }
+}
+
+:root {
+  --color-primary: #558afd;
+  --color-on-primary: #f8fafc;
+  --color-primary-contrast: var(--color-on-primary);
+  --color-primary-tint: rgba(37, 99, 235, 0.1);
+  --color-primary-soft: rgba(37, 99, 235, 0.18);
+  --color-primary-border: rgba(37, 99, 235, 0.3);
+  --color-primary-glow: rgba(37, 99, 235, 0.22);
+  --color-background-color: #e8e8e8;
+  --color-surface: #fafcff;
+  --color-surface-hover: #e0e0e0;
+  --color-surface-soft: #fcfeff;
+  --color-bet-panel: #fff;
+  --color-main: #1e293b;
+  --color-subtle: #4b5563;
+  --color-subtle-light: #9ca3af;
+  --color-border-subtle: rgba(15, 23, 42, 0.1);
+  --color-card-bg: #ffffff;
+  --color-btn-bg: rgba(15, 23, 42, 0.05);
+  --color-btn-bg-hover: rgba(15, 23, 42, 0.1);
+  --color-outcome-background: #f6f5f6;
+  --color-outcome-bg: #eef1f3;
+  --color-side-outcome-background: #eef1f3;
+  --color-header-bg: #ffffff;
+  --color-header-border: rgba(15, 23, 42, 0.12);
+  --color-header-muted: #64748b;
+  --color-header-action-bg: rgba(15, 23, 42, 0.06);
+  --color-header-divider: rgba(15, 23, 42, 0.12);
+  --color-header-icon-muted: rgba(15, 23, 42, 0.45);
+  --color-balance: #f5c842;
+  --color-bottom-nav-bg: rgba(240, 244, 245, 0.85);
+  --color-bottom-nav-border: rgba(0, 0, 0, 0.06);
+  --color-bottom-nav-shadow: 0 -1px 0 0 rgba(37, 99, 235, 0.2), 0 -8px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  --color-sticky-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.12);
+  --color-live: #ef4444;
+  --color-link: #1d4ed8;
+  --color-link-soft: rgba(37, 99, 235, 0.15);
+
+  --color-bet-slip-accent: #558afd;
+  --color-bet-slip-accent-mid: #7c9ff9;
+  --color-bet-slip-accent-soft: #4071d9;
+  --color-bet-slip-on-accent: #f8fafc;
+  --color-bet-slip-chip-text: #3d52c4;
+  --color-bet-slip-highlight: #97b6ff;
+  --color-bet-slip-market-mint: #9cb8ff;
+  --color-bet-slip-header-dark-start: #0f1c3d;
+  --color-bet-slip-header-dark-mid: #2648b8;
+  --color-bet-slip-header-bg: linear-gradient(
+    135deg,
+    var(--color-bet-slip-accent-soft) 0%,
+    var(--color-bet-slip-accent-mid) 46%,
+    var(--color-bet-slip-accent) 100%
+  );
+  --color-bet-slip-header-elev: 0 2px 18px rgba(85, 138, 253, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.06);
+  --color-bet-slip-tab-inactive-bg-dark: #2c3448;
+  --color-bet-slip-stake-label-dark: #e2e8f0;
+  --color-bet-slip-deep-1: #0a101c;
+  --color-bet-slip-deep-2: #0f1522;
+  --color-bet-slip-deep-3: #0a121c;
+  --color-bet-slip-deep-4: #0d1624;
+  --color-bet-slip-deep-5: #0b1420;
+  --color-bet-slip-deep-6: #070e18;
+  --color-bet-slip-deep-7: #0c141e;
+  --color-bet-slip-deep-8: #0a1620;
+  --color-bet-slip-deep-9: #0a1018;
+  --color-bet-slip-deep-10: #1a2d52;
+  --color-bet-slip-deep-11: #101e38;
+  --color-bet-slip-deep-12: #121c24;
+  --color-bet-slip-deep-13: #0a1218;
+  --color-bet-slip-odds-fg: var(--color-bet-slip-accent);
+}
+
+.dark {
+  --color-primary: #63e2b7;
+  --color-on-primary: #0c1f18;
+  --color-primary-contrast: var(--color-on-primary);
+  --color-primary-tint: rgba(99, 226, 183, 0.18);
+  --color-primary-soft: rgba(99, 226, 183, 0.32);
+  --color-primary-border: rgba(99, 226, 183, 0.5);
+  --color-primary-glow: rgba(99, 226, 183, 0.45);
+  --color-background-color: #101014;
+  --color-surface: #3a4142;
+  --color-surface-hover: #4a5152;
+  --color-surface-soft: #292d2e;
+  --color-bet-panel: #232626;
+  --color-main: #f1f5f9;
+  --color-subtle: #9ca3af;
+  --color-subtle-light: #d1d5db;
+  --color-border-subtle: rgba(255, 255, 255, 0.08);
+  --color-card-bg: rgba(255, 255, 255, 0.04);
+  --color-btn-bg: rgba(255, 255, 255, 0.05);
+  --color-btn-bg-hover: rgba(255, 255, 255, 0.09);
+  --color-outcome-background: #292d2e;
+  --color-outcome-bg: rgba(255, 255, 255, 0.04);
+  --color-side-outcome-background: #202324;
+  --color-header-bg: #0f1213;
+  --color-header-border: rgba(255, 255, 255, 0.08);
+  --color-header-muted: rgba(255, 255, 255, 0.6);
+  --color-header-action-bg: rgba(255, 255, 255, 0.05);
+  --color-header-divider: rgba(255, 255, 255, 0.1);
+  --color-header-icon-muted: rgba(255, 255, 255, 0.5);
+  --color-balance: #f5c842;
+  --color-bottom-nav-bg: rgba(15, 18, 19, 0.82);
+  --color-bottom-nav-border: rgba(255, 255, 255, 0.07);
+  --color-bottom-nav-shadow: 0 -1px 0 0 rgba(99, 226, 183, 0.42), 0 -8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --color-sticky-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.45);
+  --color-live: #f87171;
+  --color-link: #86efac;
+  --color-link-soft: rgba(134, 239, 172, 0.22);
+
+  --color-bet-slip-accent: #0fa372;
+  --color-bet-slip-accent-mid: #72d9b5;
+  --color-bet-slip-accent-soft: #dff8ef;
+  --color-bet-slip-chip-text: #0d7a5a;
+  --color-bet-slip-highlight: #4ae8b8;
+  --color-bet-slip-market-mint: #7ee8c4;
+  --color-bet-slip-header-dark-start: #053827;
+  --color-bet-slip-header-dark-mid: #0b6f50;
+  --color-bet-slip-tab-inactive-bg-dark: #2c3b35;
+  --color-bet-slip-deep-1: #0a1412;
+  --color-bet-slip-deep-2: #0f1a18;
+  --color-bet-slip-deep-3: #0a1614;
+  --color-bet-slip-deep-4: #0d1614;
+  --color-bet-slip-deep-5: #0b1f18;
+  --color-bet-slip-deep-6: #070f0d;
+  --color-bet-slip-deep-7: #0c1412;
+  --color-bet-slip-deep-8: #0a1814;
+  --color-bet-slip-deep-9: #0a1210;
+  --color-bet-slip-deep-10: #0a3024;
+  --color-bet-slip-deep-11: #042018;
+  --color-bet-slip-deep-12: #0c1816;
+  --color-bet-slip-deep-13: #0a1411;
+
+  --color-bet-slip-header-bg: linear-gradient(
+    135deg,
+    var(--color-bet-slip-header-dark-start) 0%,
+    var(--color-bet-slip-header-dark-mid) 48%,
+    var(--color-bet-slip-accent) 100%
+  );
+  --color-bet-slip-header-elev: 0 3px 22px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22);
+  --color-bet-slip-odds-fg: #63e2b7;
+}
+
+.bg-surface {
+  background-color: var(--color-surface);
+}
+
+.bg-surface-hover:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.bg-surface-soft {
+  background-color: var(--color-surface-soft);
+}
+
+.bg-bet-panel {
+  background-color: var(--color-bet-panel);
+}
+
+.text-main {
+  color: var(--color-main);
+}
+
+.text-subtle {
+  color: var(--color-subtle);
+}
+
+.text-subtle-light {
+  color: var(--color-subtle-light);
+}
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.bg-outcome {
+  background-color: var(--color-outcome-background);
+}
+
+.bg-outcome.side-outcome {
+  background-color: var(--color-side-outcome-background);
+}
+
+.bg-outcome.side-outcome:hover {
+  background-color: var(--color-surface-hover);
+}
+
+.sport-filter-btn {
+  display: flex;
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background-color 0.2s, color 0.2s;
+  padding: 0.5rem 0.75rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.sport-filter-btn.is-active {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.sport-filter-btn:not(.is-active) {
+  background-color: var(--color-surface-soft);
+  color: var(--color-main);
+  border-color: var(--color-surface-hover);
+}
+
+.sport-filter-btn:not(.is-active):hover {
+  background-color: var(--color-surface-hover);
+}
+
+@layer components {
+  .bet-slip-header {
+    @apply text-[color:var(--color-bet-slip-on-accent)];
+    background: var(--color-bet-slip-header-bg);
+    box-shadow: var(--color-bet-slip-header-elev);
+  }
+
+  .bet-slip-header-title {
+    @apply [text-shadow:0_1px_3px_rgba(0,0,0,0.28)];
+  }
+
+  .bet-slip-header-chip {
+    @apply border border-solid text-[color:var(--color-bet-slip-chip-text)] [box-shadow:inset_0_1px_0_rgba(255,255,255,0.65)];
+    border-color: color-mix(in srgb, var(--color-bet-slip-accent) 42%, white);
+    background: linear-gradient(
+      to bottom right,
+      color-mix(in srgb, white 92%, var(--color-bet-slip-accent)),
+      color-mix(in srgb, var(--color-bet-slip-accent) 24%, white)
+    );
+  }
+
+  .dark .bet-slip-header-chip {
+    @apply border-[rgba(248,250,252,0.38)] text-[color:var(--color-bet-slip-on-accent)] [box-shadow:inset_0_1px_0_rgba(255,255,255,0.22)];
+    background: linear-gradient(
+      to bottom right,
+      rgba(255, 255, 255, 0.2),
+      rgba(255, 255, 255, 0.07)
+    );
+  }
+
+  .bet-slip-header-close {
+    @apply border border-solid border-[rgba(248,250,252,0.38)] text-[color:var(--color-bet-slip-on-accent)] [box-shadow:inset_0_1px_0_rgba(255,255,255,0.28)];
+    background: linear-gradient(
+      to bottom right,
+      rgba(255, 255, 255, 0.26),
+      color-mix(in srgb, var(--color-bet-slip-accent) 88%, var(--color-bet-slip-deep-10))
+    );
+  }
+
+  .dark .bet-slip-header-close {
+    @apply border-[rgba(248,250,252,0.38)];
+    background: linear-gradient(
+      to bottom right,
+      rgba(255, 255, 255, 0.22),
+      color-mix(in srgb, var(--color-bet-slip-accent) 72%, var(--color-bet-slip-deep-11))
+    );
+  }
+
+  @media (hover: hover) {
+    .bet-slip-header-close:hover {
+      @apply brightness-[1.08];
+    }
+  }
+
+  .bet-slip-tablist {
+    @apply [box-shadow:inset_0_1px_0_rgba(255,255,255,0.06),0_8px_22px_-6px_rgba(15,23,42,0.16),0_2px_10px_-2px_rgba(15,23,42,0.09)];
+  }
+
+  .dark .bet-slip-tablist {
+    @apply [box-shadow:inset_0_1px_0_rgba(255,255,255,0.06),0_10px_28px_-4px_rgba(0,0,0,0.55),0_2px_12px_-2px_rgba(0,0,0,0.38)];
+  }
+
+  .bet-slip-bets-column {
+    @apply flex flex-col gap-4 pt-4;
+  }
+
+  .bet-slip-tab--inactive {
+    @apply bg-[color-mix(in_srgb,var(--color-surface-hover)_35%,var(--color-surface-soft))] text-[color:var(--color-subtle)];
+  }
+
+  @media (hover: hover) {
+    .bet-slip-tab--inactive:hover {
+      @apply text-[color:var(--color-main)];
+    }
+  }
+
+  .dark .bet-slip-tab--inactive {
+    @apply text-[color:var(--color-subtle-light)] bg-[var(--color-bet-slip-tab-inactive-bg-dark)];
+  }
+
+  .dark .bet-slip-tab--inactive:hover {
+    @apply text-[color:var(--color-bet-slip-on-accent)];
+  }
+
+  .bet-slip-tab--active {
+    background: linear-gradient(
+      to bottom right,
+      color-mix(in srgb, var(--color-bet-slip-accent) 56%, white),
+      var(--color-bet-slip-accent)
+    );
+    color: var(--color-bet-slip-on-accent);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      0 2px 12px color-mix(in srgb, var(--color-bet-slip-accent) 40%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--color-bet-slip-accent) 35%, transparent);
+  }
+
+  .dark .bet-slip-tab--active {
+    background: linear-gradient(to bottom right, var(--color-bet-slip-highlight), var(--color-bet-slip-accent));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.24),
+      0 2px 14px rgba(15, 163, 114, 0.45),
+      0 0 0 1px rgba(99, 226, 183, 0.42);
+  }
+
+  .bet-slip-footer {
+    border-top: 2px solid color-mix(in srgb, var(--color-surface-hover) 55%, var(--color-bet-slip-accent) 12%);
+    background: linear-gradient(
+      to bottom,
+      var(--color-surface-soft),
+      color-mix(in srgb, var(--color-surface-soft) 92%, var(--color-background-color) 8%)
+    );
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.08),
+      0 -4px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  .dark .bet-slip-footer {
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-surface-soft) 92%, var(--color-bet-slip-deep-1)),
+      color-mix(in srgb, var(--color-background-color) 78%, var(--color-bet-slip-accent) 14%)
+    );
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 -8px 28px rgba(0, 0, 0, 0.45);
+  }
+
+  .bet-slip-place {
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-bet-slip-accent) 58%, white) 0%,
+      var(--color-bet-slip-accent) 100%
+    );
+    color: var(--color-bet-slip-on-accent);
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.22),
+      0 6px 24px color-mix(in srgb, var(--color-bet-slip-accent) 36%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--color-bet-slip-accent) 42%, transparent);
+  }
+
+  .dark .bet-slip-place {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-bet-slip-accent) 100%);
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.2),
+      0 6px 24px color-mix(in srgb, var(--color-primary) 38%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--color-primary) 45%, transparent);
+  }
+
+  .bet-slip-place-label {
+    @apply [text-shadow:0_1px_2px_rgba(0,0,0,0.35)];
+  }
+
+  @media (hover: hover) {
+    .bet-slip-place:not(:disabled):hover {
+      box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.26),
+        0 8px 32px color-mix(in srgb, var(--color-bet-slip-accent) 42%, transparent),
+        0 0 0 1px color-mix(in srgb, var(--color-bet-slip-accent) 50%, transparent);
+    }
+
+    .dark .bet-slip-place:not(:disabled):hover {
+      box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.25),
+        0 8px 32px color-mix(in srgb, var(--color-primary) 45%, transparent),
+        0 0 0 1px color-mix(in srgb, var(--color-primary) 55%, transparent);
+    }
+  }
+
+  .bet-slip-add-parlay-btn {
+    transform-origin: center;
+    animation: bet-slip-add-breathe 2.35s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bet-slip-add-parlay-btn {
+      animation: none;
+    }
+  }
+
+  .bet-slip-line {
+    border: 2px solid color-mix(in srgb, var(--color-bet-slip-accent) 22%, var(--color-surface-hover) 78%);
+    background:
+      linear-gradient(
+        165deg,
+        color-mix(in srgb, var(--color-surface-soft) 55%, var(--color-surface)) 0%,
+        var(--color-surface) 42%,
+        color-mix(in srgb, var(--color-surface) 94%, var(--color-surface-hover)) 100%
+      );
+    box-shadow:
+      0 4px 22px rgba(15, 23, 42, 0.07),
+      0 0 0 1px rgba(255, 255, 255, 0.06),
+      inset 0 1px 0 rgba(255, 255, 255, 0.42);
+  }
+
+  .dark .bet-slip-line {
+    border-color: color-mix(in srgb, var(--color-bet-slip-accent) 28%, var(--color-surface-hover) 72%);
+    background:
+      linear-gradient(
+        165deg,
+        color-mix(in srgb, var(--color-surface-soft) 88%, var(--color-bet-slip-deep-8)) 0%,
+        color-mix(in srgb, var(--color-surface) 92%, var(--color-bet-slip-deep-7)) 48%,
+        var(--color-surface) 100%
+      );
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.42),
+      0 0 0 1px color-mix(in srgb, var(--color-bet-slip-accent) 18%, transparent),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  @media (hover: hover) {
+    .bet-slip-line:hover {
+      border-color: color-mix(in srgb, var(--color-bet-slip-accent) 34%, var(--color-surface-hover) 66%);
+      box-shadow:
+        0 8px 28px rgba(15, 23, 42, 0.1),
+        0 0 0 1px color-mix(in srgb, var(--color-bet-slip-accent) 22%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    }
+
+    .dark .bet-slip-line:hover {
+      border-color: color-mix(in srgb, var(--color-bet-slip-accent) 40%, var(--color-surface-hover) 60%);
+      box-shadow:
+        0 10px 36px rgba(0, 0, 0, 0.48),
+        0 0 0 1px color-mix(in srgb, var(--color-bet-slip-accent) 28%, transparent),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+  }
+
+  .bet-slip-line-accent {
+    @apply w-[3px] opacity-[0.95] [box-shadow:2px_0_8px_color-mix(in_srgb,var(--color-bet-slip-accent)_25%,transparent)];
+    background: linear-gradient(
+      180deg,
+      var(--color-bet-slip-accent) 0%,
+    color-mix(in srgb, var(--color-primary) 70%, var(--color-bet-slip-accent)) 45%,
+      transparent 100%
+    );
+  }
+
+  .bet-slip-line-remove {
+    margin-bottom: 3px;
+    border-right: 1px solid color-mix(in srgb, var(--color-surface-hover) 55%, transparent);
+    color: var(--color-subtle);
+    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .dark .bet-slip-line-remove {
+    background: color-mix(in srgb, var(--color-surface) 88%, var(--color-bet-slip-deep-4));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 1px 0 rgba(0, 0, 0, 0.2);
+    color: var(--color-subtle-light);
+  }
+
+  @media (hover: hover) {
+    .bet-slip-line-remove:hover {
+      background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--color-live) 18%, var(--color-surface-hover)) 0%,
+        color-mix(in srgb, var(--color-live) 10%, var(--color-surface-hover)) 100%
+      );
+      color: var(--color-live);
+      box-shadow: inset -1px 0 0 rgba(248, 113, 113, 0.2);
+    }
+  }
+
+
+  .bet-slip-line-info {
+    padding: 0.4rem 0.5rem 0.5rem 1rem;
+  }
+
+  .dark .bet-slip-line-info {
+    background: color-mix(in srgb, var(--color-surface) 88%, var(--color-bet-slip-deep-4));
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.05),
+      0 1px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .bet-slip-line-market {
+    @apply mb-[0.2rem] inline-flex flex-wrap items-center gap-1 rounded-md border border-solid py-[0.12rem] px-[0.35rem];
+    border-color: color-mix(in srgb, var(--color-bet-slip-accent) 28%, transparent);
+    background: color-mix(in srgb, var(--color-bet-slip-accent) 10%, transparent);
+  }
+
+  .dark .bet-slip-line-market {
+    @apply border-[color:color-mix(in_srgb,var(--color-bet-slip-accent)_35%,transparent)] bg-[color:color-mix(in_srgb,var(--color-bet-slip-accent)_14%,transparent)];
+  }
+
+  .bet-slip-line-market-title {
+    @apply text-[color:var(--color-bet-slip-accent)];
+  }
+
+  .dark .bet-slip-line-market-title {
+    @apply text-[color:var(--color-bet-slip-market-mint)] [text-shadow:0_0_12px_color-mix(in_srgb,var(--color-bet-slip-accent)_35%,transparent)];
+  }
+
+  .bet-slip-line-market-sub {
+    @apply text-[color:var(--color-subtle)];
+  }
+
+  .dark .bet-slip-line-market-sub {
+    @apply text-[color:var(--color-subtle-light)];
+  }
+
+  .bet-slip-line-match {
+    @apply text-[color:var(--color-main)];
+  }
+
+  .bet-slip-line-odds-at,
+  .bet-slip-line-odds-num {
+    @apply text-[color:var(--color-bet-slip-accent)];
+  }
+
+  .dark .bet-slip-line-odds-at,
+  .dark .bet-slip-line-odds-num {
+    @apply text-[color:var(--color-bet-slip-odds-fg)];
+  }
+
+  .dark .bet-slip-line-odds-num {
+    @apply [text-shadow:0_0_18px_color-mix(in_srgb,var(--color-bet-slip-accent)_40%,transparent)];
+  }
+
+  .bet-slip-line-odds {
+    padding: 0.25rem 0.55rem;
+    border-radius: 0.6rem;
+    border: 2px solid color-mix(in srgb, var(--color-bet-slip-accent) 32%, transparent);
+    background: linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--color-bet-slip-accent) 16%, var(--color-surface-soft)) 0%,
+      color-mix(in srgb, var(--color-bet-slip-accent) 12%, var(--color-surface-soft)) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      0 3px 14px color-mix(in srgb, var(--color-bet-slip-accent) 16%, transparent);
+  }
+
+  .dark .bet-slip-line-odds {
+    border-color: color-mix(in srgb, var(--color-bet-slip-accent) 45%, transparent);
+    background: linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--color-surface) 90%, var(--color-bet-slip-deep-5)) 0%,
+      color-mix(in srgb, var(--color-bet-slip-accent) 18%, var(--color-surface-soft)) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 4px 18px rgba(0, 0, 0, 0.35);
+  }
+
+  .bet-slip-line-odds--inline {
+    padding: 0.1rem 0.32rem;
+    border-width: 1px;
+    border-radius: 0.45rem;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.16),
+      0 2px 8px color-mix(in srgb, var(--color-bet-slip-accent) 12%, transparent);
+  }
+
+  .dark .bet-slip-line-odds--inline {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 2px 6px rgba(0, 0, 0, 0.28);
+  }
+
+  .dark .bet-slip-line-odds--inline .bet-slip-line-odds-num {
+    @apply [text-shadow:0_0_10px_color-mix(in_srgb,var(--color-bet-slip-accent)_28%,transparent)];
+  }
+
+  .parlay-stripe-even-leg .bet-slip-line-market {
+    border-color: color-mix(in srgb, var(--color-bet-slip-accent) 16%, transparent);
+    background: color-mix(in srgb, var(--color-bet-slip-accent) 6%, var(--color-surface-soft));
+  }
+
+  .dark .parlay-stripe-even-leg .bet-slip-line-market {
+    border-color: color-mix(in srgb, var(--color-bet-slip-accent) 20%, transparent);
+    background: color-mix(in srgb, var(--color-bet-slip-accent) 8%, var(--color-bet-slip-deep-2));
+  }
+
+  .parlay-stripe-even-leg .bet-slip-line-market-title {
+    color: color-mix(in srgb, var(--color-bet-slip-accent) 88%, var(--color-main));
+  }
+
+  .dark .parlay-stripe-even-leg .bet-slip-line-market-title {
+    color: color-mix(in srgb, var(--color-bet-slip-market-mint) 78%, var(--color-bet-slip-deep-2));
+    text-shadow: none;
+  }
+
+  .dark .parlay-stripe-even-leg .bet-slip-line-market-sub {
+    color: color-mix(in srgb, var(--color-subtle-light) 88%, transparent);
+  }
+
+  .dark .parlay-stripe-even-leg .bet-slip-line-match {
+    color: color-mix(in srgb, var(--color-main) 90%, var(--color-bet-slip-deep-2));
+  }
+
+  .parlay-stripe-even-leg .bet-slip-line-odds {
+    border-color: color-mix(in srgb, var(--color-bet-slip-accent) 18%, transparent);
+    background: linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--color-surface-soft) 96%, var(--color-bet-slip-accent) 4%) 0%,
+      color-mix(in srgb, var(--color-bet-slip-accent) 8%, var(--color-surface-soft)) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 2px 10px color-mix(in srgb, var(--color-bet-slip-accent) 8%, transparent);
+  }
+
+  .dark .parlay-stripe-even-leg .bet-slip-line-odds {
+    border-color: color-mix(in srgb, var(--color-bet-slip-accent) 28%, transparent);
+    background: linear-gradient(
+      145deg,
+      color-mix(in srgb, var(--color-surface) 86%, var(--color-bet-slip-deep-3)) 0%,
+      color-mix(in srgb, var(--color-bet-slip-accent) 10%, var(--color-bet-slip-deep-2)) 100%
+    );
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.04),
+      0 2px 8px rgba(0, 0, 0, 0.28);
+  }
+
+  .dark .parlay-stripe-even-leg .bet-slip-line-odds-at,
+  .dark .parlay-stripe-even-leg .bet-slip-line-odds-num {
+    color: color-mix(in srgb, var(--color-bet-slip-odds-fg) 82%, var(--color-bet-slip-deep-2));
+  }
+
+  .dark .parlay-stripe-even-leg .bet-slip-line-odds-num {
+    text-shadow: none;
+  }
+
+  .bet-slip-line-stake {
+    padding: 0.4rem 0.5rem;
+    border-radius: 0.6rem;
+    border: 1px solid color-mix(in srgb, var(--color-surface-hover) 72%, var(--color-bet-slip-accent) 10%);
+    background: color-mix(in srgb, var(--color-background-color) 18%, var(--color-surface));
+    box-shadow: inset 0 2px 6px rgba(15, 23, 42, 0.05);
+  }
+
+  .dark .bet-slip-line-stake {
+    border-color: color-mix(in srgb, var(--color-surface-hover) 50%, var(--color-bet-slip-accent) 26%);
+    background: color-mix(in srgb, var(--color-surface) 82%, var(--color-bet-slip-deep-6));
+    box-shadow:
+      inset 0 2px 8px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(0, 0, 0, 0.15);
+  }
+
+  .bet-slip-line-stake-head {
+    @apply flex items-center justify-between gap-2 mb-[0.3rem];
+  }
+
+  .bet-slip-line-stake-label {
+    @apply text-[11px] font-extrabold tracking-[0.06em] uppercase text-[color:var(--color-subtle)];
+  }
+
+  .dark .bet-slip-line-stake-label {
+    @apply text-[color:var(--color-bet-slip-stake-label-dark)];
+  }
+
+  .bet-slip-line-stake-limit {
+    @apply text-[10px] font-extrabold tabular-nums text-[color:var(--color-subtle)];
+  }
+
+  .dark .bet-slip-line-stake-limit {
+    @apply text-[color:color-mix(in_srgb,var(--color-subtle-light)_88%,white)];
+  }
+
+  .bet-slip-line-stake-field {
+    @apply flex items-stretch overflow-hidden rounded-lg border-none pr-2 transition-[box-shadow] duration-200 ease-out;
+    background: linear-gradient(
+      to bottom right,
+      color-mix(in srgb, var(--color-background-color) 38%, var(--color-surface)) 0%,
+      var(--color-surface) 100%
+    );
+    box-shadow:
+      inset 0 2px 4px rgba(15, 23, 42, 0.06),
+      0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .dark .bet-slip-line-stake-field {
+    background: color-mix(in srgb, var(--color-surface) 90%, var(--color-bet-slip-deep-13));
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.45);
+  }
+
+  .bet-slip-line-stake-field:focus-within {
+    box-shadow:
+      inset 0 2px 4px rgba(15, 23, 42, 0.06),
+      0 0 0 3px color-mix(in srgb, var(--color-bet-slip-accent) 18%, transparent);
+  }
+
+  .dark .bet-slip-line-stake-field:focus-within {
+    box-shadow:
+      inset 0 2px 8px rgba(0, 0, 0, 0.45),
+      0 0 0 3px color-mix(in srgb, var(--color-bet-slip-accent) 22%, transparent);
+  }
+
+  .bet-slip-line-stake-prefix {
+    @apply flex items-center px-[0.55rem] text-sm font-black text-[color:var(--color-subtle)] [box-shadow:inset_-1px_0_0_rgba(255,255,255,0.06)];
+    background: color-mix(in srgb, var(--color-surface-hover) 28%, transparent);
+  }
+
+  .dark .bet-slip-line-stake-prefix {
+    @apply text-[color:var(--color-subtle-light)];
+    background: color-mix(in srgb, var(--color-surface-hover) 42%, var(--color-bet-slip-deep-12));
+  }
+
+  .bet-slip-line-stake-input {
+    @apply text-[color:var(--color-main)];
+  }
+
+  .bet-slip-line-stake-input::placeholder {
+    @apply text-[color:var(--color-subtle-light)] opacity-[0.55];
+  }
+
+  .dark .bet-slip-line-stake-input::placeholder {
+    @apply opacity-[0.72];
+  }
+}
